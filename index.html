@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Masaram Gondi Transliterator - Convert English/Hindi to Masaram Gondi script. jQuery Plugin with virtual keyboard support.">
+    <meta name="keywords" content="Masaram Gondi, Transliterator, Gondi Script, ITRANS, Hindi to Gondi, jQuery Plugin">
+    <meta name="author" content="Rajesh Kumar Dhuriya">
+    
+    <title>Masaram Gondi Transliterator | jQuery Plugin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>𑴀</text></svg>">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Masaram+Gondi&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Highlight.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/dark.min.css">
+    
+    <style>
+        :root {
+            --gondi-primary: #6366f1;
+            --gondi-primary-dark: #4f46e5;
+            --gondi-secondary: #f59e0b;
+            --gondi-success: #10b981;
+            --gondi-font: 'Noto Sans Masaram Gondi', sans-serif;
+            --code-font: 'JetBrains Mono', monospace;
+            --body-font: 'Inter', sans-serif;
+        }
+        
+        [data-bs-theme="dark"] {
+            --bs-body-bg: #0f172a;
+            --bs-body-color: #e2e8f0;
+            --gondi-primary: #818cf8;
+            --card-bg: #1e293b;
+            --code-bg: #1e293b;
+        }
+        
+        [data-bs-theme="light"] {
+            --card-bg: #ffffff;
+            --code-bg: #f1f5f9;
+        }
+        
+        * {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--body-font);
+            line-height: 1.7;
+        }
+        
+        /* Navbar */
+        .navbar {
+            backdrop-filter: blur(10px);
+            background: rgba(var(--bs-body-bg-rgb), 0.9) !important;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .navbar-brand .gondi-char {
+            font-family: var(--gondi-font);
+            color: var(--gondi-primary);
+            font-size: 1.8rem;
+            margin-right: 0.25rem;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '𑴀𑴁𑴂𑴃𑴄𑴅𑴆𑴈𑴉𑴋';
+            font-family: var(--gondi-font);
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.05;
+            top: -50px;
+            right: -50px;
+            white-space: nowrap;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-gondi {
+            font-family: var(--gondi-font);
+            font-size: 2rem;
+            display: block;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .hero-buttons .btn {
+            padding: 12px 28px;
+            font-weight: 500;
+            border-radius: 8px;
+            margin: 5px;
+        }
+        
+        .btn-hero-primary {
+            background: white;
+            color: #764ba2;
+        }
+        
+        .btn-hero-primary:hover {
+            background: #f0f0f0;
+            color: #667eea;
+        }
+        
+        .btn-hero-secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.5);
+            color: white;
+        }
+        
+        .btn-hero-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+            color: white;
+        }
+        
+        /* Version Badge */
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gondi-primary);
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--bs-secondary-color);
+            margin-bottom: 3rem;
+        }
+        
+        /* Feature Cards */
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            height: 100%;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--gondi-primary), var(--gondi-primary-dark));
+            color: white;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Demo Section */
+        .demo-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .demo-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .demo-input, .demo-output {
+            font-size: 1.1rem;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        
+        .demo-output {
+            font-family: var(--gondi-font);
+            font-size: 1.4rem;
+            background: var(--code-bg);
+            min-height: 120px;
+        }
+        
+        .mode-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .mode-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid var(--gondi-primary);
+            background: transparent;
+            color: var(--gondi-primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mode-btn:hover, .mode-btn.active {
+            background: var(--gondi-primary);
+            color: white;
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .code-block pre {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+
+            background: #1e293b !important;
+            border-radius: 12px;
+            padding: 1rem;        /* mobile friendly */
+            margin: 0;
+
+            overflow-x: auto;
+            overflow-y: hidden;
+
+            white-space: pre;
+            -webkit-overflow-scrolling: touch; /* smooth scroll iOS */
+        }
+        
+        .code-block code {
+            display: block;
+            width: 100%;          /* ❗ NOT max-content */
+            max-width: 100%;
+            min-width: 0;         /* 🔥 CRITICAL for mobile */
+            
+            font-family: var(--code-font);
+            font-size: 0.85rem;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 6px;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .copy-btn.copied {
+            background: var(--gondi-success);
+            color: white;
+        }
+        
+        /* Tabs */
+        .nav-pills .nav-link {
+            color: var(--bs-body-color);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+        
+        .nav-pills .nav-link.active {
+            background: var(--gondi-primary);
+        }
+        
+        /* Options Table */
+        .options-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .options-table th {
+            background: var(--gondi-primary);
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .options-table th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+        
+        .options-table th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+        
+        .options-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+        }
+        
+        .options-table tr:last-child td:first-child {
+            border-radius: 0 0 0 10px;
+        }
+        
+        .options-table tr:last-child td:last-child {
+            border-radius: 0 0 10px 0;
+        }
+        
+        .options-table code {
+            background: var(--code-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--code-font);
+            font-size: 0.875rem;
+        }
+        
+        .type-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .type-string { background: #dbeafe; color: #1d4ed8; }
+        .type-boolean { background: #dcfce7; color: #16a34a; }
+        .type-number { background: #fef3c7; color: #d97706; }
+        .type-function { background: #f3e8ff; color: #9333ea; }
+        .type-array { background: #fee2e2; color: #dc2626; }
+        
+        /* Quick Start Steps */
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gondi-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            min-width: 0;   /* 🔥 MOST IMPORTANT */
+    width: 100%;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Character Map */
+        .char-map {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+        }
+        
+        .char-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(128, 128, 128, 0.1);
+            border-radius: 8px;
+            padding: 12px 8px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .char-item:hover {
+            border-color: var(--gondi-primary);
+            transform: scale(1.05);
+        }
+        
+        .char-gondi {
+            font-family: var(--gondi-font);
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .char-latin {
+            font-size: 0.75rem;
+            color: var(--bs-secondary-color);
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 60px 0 30px;
+        }
+        
+        .footer a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer a:hover {
+            color: white;
+        }
+        
+        .footer-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            transition: all 0.2s;
+        }
+        
+        .social-links a:hover {
+            background: var(--gondi-primary);
+            color: white;
+        }
+        
+        /* Scroll to Top */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gondi-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+            border: none;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-top:hover {
+            transform: translateY(-3px);
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(128, 128, 128, 0.1);
+            color: var(--bs-body-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.2);
+        }
+
+        .masaram-text{
+            font-family: var(--gondi-font);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-section {
+                padding: 80px 0 60px;
+            }
+            
+            .section {
+                padding: 50px 0;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .demo-output {
+                font-size: 1.2rem;
+            }
+            
+            .options-table {
+                font-size: 0.875rem;
+            }
+            
+            .options-table td, .options-table th {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        
+        /* TOC */
+        .toc {
+            position: sticky;
+            top: 80px;
+        }
+        
+        .toc-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gondi-primary);
+        }
+        
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .toc-list li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .toc-list a {
+            color: var(--bs-body-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .toc-list a:hover {
+            color: var(--gondi-primary);
+        }
+        
+        .toc-list a.active {
+            color: var(--gondi-primary);
+            font-weight: 600;
+        }
+        
+        /* Alert customization */
+        .alert-tip {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+        }
+        
+        .alert-tip .bi {
+            color: var(--gondi-primary);
+        }
+
+        /* Code block container */
+        pre[class*="language-"] {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;      /* horizontal scroll */
+            white-space: pre;      /* preserve formatting */
+            box-sizing: border-box;
+        }
+
+        /* Code itself */
+        code[class*="language-"] {
+            display: block;
+            width: 100%;
+            font-size: 0.875rem;   /* responsive readable size */
+            line-height: 1.6;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            pre[class*="language-"] {
+                font-size: 0.8rem;
+                padding: 0.75rem;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           SUPPORT SECTION STYLES
+           ═══════════════════════════════════════════════════════════════ */
+
+        /* Support Cards */
+        .support-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .support-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        }
+
+        .support-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .github-icon {
+            background: linear-gradient(135deg, #24292e, #404448);
+            color: white;
+            box-shadow: 0 10px 30px rgba(36, 41, 46, 0.3);
+        }
+
+        .coffee-icon {
+            background: linear-gradient(135deg, #FFDD00, #FF9500);
+            color: #000;
+            box-shadow: 0 10px 30px rgba(255, 149, 0, 0.3);
+            animation: steam 2s ease-in-out infinite;
+        }
+
+        @keyframes steam {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .support-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .support-text {
+            color: var(--bs-secondary-color);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        /* GitHub Stats */
+        .github-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 12px;
+        }
+
+        .github-stats .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .github-stats .stat-count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gondi-primary);
+        }
+
+        .github-stats .stat-label {
+            font-size: 0.75rem;
+            color: var(--bs-secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* GitHub Button */
+        .btn-github {
+            background: linear-gradient(135deg, #24292e, #404448);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(36, 41, 46, 0.3);
+        }
+
+        .btn-github:hover {
+            background: linear-gradient(135deg, #404448, #24292e);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(36, 41, 46, 0.4);
+        }
+
+        .btn-github i {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-github:hover i {
+            transform: scale(1.2) rotate(15deg);
+        }
+
+        /* Coffee Tiers */
+        .coffee-tiers {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .coffee-tier {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 70px;
+        }
+
+        .coffee-tier:hover {
+            border-color: #FFDD00;
+            background: rgba(255, 221, 0, 0.1);
+        }
+
+        .coffee-tier.active {
+            border-color: #FFDD00;
+            background: linear-gradient(135deg, rgba(255, 221, 0, 0.2), rgba(255, 149, 0, 0.1));
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.2);
+        }
+
+        .tier-icon {
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+        }
+
+        .tier-amount {
+            font-weight: 700;
+            color: var(--bs-body-color);
+        }
+
+        /* Coffee Button */
+        .btn-coffee {
+            background: linear-gradient(135deg, #FFDD00, #FF9500);
+            color: #000;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-coffee:hover {
+            background: linear-gradient(135deg, #FF9500, #FFDD00);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 149, 0, 0.4);
+        }
+
+        .bmc-logo {
+            height: 24px;
+            width: 24px;
+        }
+
+        /* Other Ways Card */
+        .other-ways-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        }
+
+        .other-way-item {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 16px;
+            transition: background 0.3s ease;
+            height: 100%;
+        }
+
+        .other-way-item:hover {
+            background: var(--code-bg);
+        }
+
+        .other-way-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gondi-primary), var(--gondi-primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .other-way-item h5 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .other-way-item p {
+            color: var(--bs-secondary-color);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Share Buttons */
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            color: white;
+        }
+
+        .share-btn.twitter { background: #000; }
+        .share-btn.twitter:hover { background: #333; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+        .share-btn.facebook { background: #1877F2; }
+        .share-btn.facebook:hover { background: #0d65d9; box-shadow: 0 5px 15px rgba(24,119,242,0.4); }
+
+        .share-btn.linkedin { background: #0A66C2; }
+        .share-btn.linkedin:hover { background: #084d94; box-shadow: 0 5px 15px rgba(10,102,194,0.4); }
+
+        .share-btn.whatsapp { background: #25D366; }
+        .share-btn.whatsapp:hover { background: #1fb855; box-shadow: 0 5px 15px rgba(37,211,102,0.4); }
+
+        .share-btn.telegram { background: #0088cc; }
+        .share-btn.telegram:hover { background: #006da3; box-shadow: 0 5px 15px rgba(0,136,204,0.4); }
+
+        /* Sponsors Section */
+        .sponsors-section {
+            padding: 2rem;
+        }
+
+        .sponsors-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .sponsor-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--code-bg);
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bs-secondary-color);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sponsor-avatar:hover {
+            border-color: var(--gondi-primary);
+            color: var(--gondi-primary);
+            transform: scale(1.1);
+        }
+
+        .sponsor-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .support-card {
+                padding: 1.5rem;
+            }
+            
+            .github-stats {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .coffee-tiers {
+                gap: 6px;
+            }
+            
+            .coffee-tier {
+                min-width: 60px;
+                padding: 10px 12px;
+            }
+            
+            .share-buttons {
+                gap: 6px;
+            }
+            
+            .share-btn {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* Animated Background for Support Section */
+        #support {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #support::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 149, 0, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Floating Animation for Icons */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .support-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .github-icon {
+            animation-delay: 0s;
+        }
+
+        .coffee-icon {
+            animation-delay: 0.5s;
+        }
+
+        /* Heart Beat Animation */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .other-ways-card h4 .bi-heart-fill {
+            animation: heartbeat 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span class="gondi-char">𑴀</span> Masaram Gondi
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto me-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#demo">Demo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#installation">Installation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#usage">Usage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#api">API</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#charmap">Characters</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#support">
+                            <i class="bi bi-heart-fill text-danger"></i> Support
+                        </a>
+                    </li>
+                </ul>
+                
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                    <i class="bi bi-moon-fill"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <span class="version-badge">
+                        <i class="bi bi-tag-fill me-1"></i> v4.0.0
+                    </span>
+                    <h1 class="hero-title">
+                        Masaram Gondi Transliterator
+                        <span class="hero-gondi">𑴤𑴱𑴫𑴦𑴤𑵄 𑴎𑴽𑴚𑵄𑴘𑴲</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        A powerful jQuery plugin to convert English (ITRANS) and Hindi to Masaram Gondi script. 
+                        Features virtual keyboard, undo/redo, stats, and more.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#demo" class="btn btn-hero-primary btn-lg">
+                            <i class="bi bi-play-fill me-2"></i> Try Demo
+                        </a>
+                        <a href="https://github.com/hinditutorpoint/masaram-gondi" class="btn btn-hero-secondary btn-lg" target="_blank">
+                            <i class="bi bi-github me-2"></i> GitHub
+                        </a>
+                        <a href="#installation" class="btn btn-hero-secondary btn-lg">
+                            <i class="bi bi-download me-2"></i> Download
+                        </a>
+                        <a href="https://gondidarshan.org" class="btn btn-hero-secondary btn-lg" target="_blank">
+                            <i class="bi bi-journal-text me-2"></i> Learn Masaram Gondi
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block text-center">
+                    <div style="font-family: var(--gondi-font); font-size: 8rem; opacity: 0.9; line-height: 1;">
+                        𑴌𑴍𑴎<br>𑴏𑴐𑴑
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Demo Section -->
+    <section class="section bg-light" id="demo">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Live Demo</h2>
+                <p class="section-subtitle">Try the transliterator with different modes and features</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="demo-card">
+                        <!-- Mode Selector -->
+                        <div class="mb-4">
+                            <label class="demo-label mb-2">
+                                <i class="bi bi-translate"></i> Translation Mode
+                            </label>
+                            <div class="mode-selector">
+                                <button class="mode-btn active" data-mode="en-gonm">
+                                    English → Gondi
+                                </button>
+                                <button class="mode-btn" data-mode="hi-gonm">
+                                    हिंदी → Gondi
+                                </button>
+                                <button class="mode-btn" data-mode="gonm-en">
+                                    Gondi → English
+                                </button>
+                                <button class="mode-btn" data-mode="gonm-hi">
+                                    Gondi → हिंदी
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="demo-label">
+                                    <i class="bi bi-pencil-square"></i> Input
+                                </label>
+                                <div class="mt-5">
+                                    <textarea id="demoInput" class="form-control demo-input" rows="5" 
+                                              placeholder="Type here... e.g., namaste, gonDI, bhaaShaa"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="demo-label">
+                                    <i class="bi bi-check2-circle"></i> Output
+                                </label>
+                                <textarea id="demoOutput" class="form-control demo-output" rows="5" 
+                                          readonly placeholder="Transliterated output will appear here..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Samples -->
+                        <div class="mt-4">
+                            <label class="demo-label mb-2">
+                                <i class="bi bi-lightning-fill"></i> Quick Samples
+                            </label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button class="btn btn-outline-primary btn-sm sample-btn" data-sample="namaste">namaste</button>
+                                <button class="btn btn-outline-primary btn-sm sample-btn" data-sample="gonDI bhaaShaa">gonDI bhaaShaa</button>
+                                <button class="btn btn-outline-primary btn-sm sample-btn" data-sample="masaram gonDI lipi">masaram gonDI lipi</button>
+                                <button class="btn btn-outline-primary btn-sm sample-btn" data-sample="bhaarata desh">bhaarata desh</button>
+                                <button class="btn btn-outline-primary btn-sm sample-btn" data-sample="0123456789">0123456789</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section class="section" id="support">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Support This Project</h2>
+                <p class="section-subtitle">Help us keep this project alive and growing</p>
+            </div>
+            
+            <div class="row justify-content-center g-4">
+                <!-- GitHub Star Card -->
+                <div class="col-md-6 col-lg-5">
+                    <div class="support-card github-card">
+                        <div class="support-icon github-icon">
+                            <i class="bi bi-github"></i>
+                        </div>
+                        <h3 class="support-title">Star on GitHub</h3>
+                        <p class="support-text">
+                            If you find this project useful, please consider giving it a ⭐ on GitHub. 
+                            It helps others discover this project and motivates us to keep improving!
+                        </p>
+                        <div class="github-stats" id="githubStats">
+                            <div class="stat-item">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <span class="stat-count" id="starCount">--</span>
+                                <span class="stat-label">Stars</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="bi bi-diagram-2-fill text-info"></i>
+                                <span class="stat-count" id="forkCount">--</span>
+                                <span class="stat-label">Forks</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="bi bi-eye-fill text-success"></i>
+                                <span class="stat-count" id="watchCount">--</span>
+                                <span class="stat-label">Watchers</span>
+                            </div>
+                        </div>
+                        <a href="https://github.com/hinditutorpoint/masaram-gondi" target="_blank" class="btn btn-github btn-lg">
+                            <i class="bi bi-star-fill me-2"></i> Star on GitHub
+                        </a>
+                        <div class="mt-3">
+                            <a href="https://github.com/hinditutorpoint/masaram-gondi/fork" target="_blank" class="btn btn-outline-dark btn-sm me-2">
+                                <i class="bi bi-diagram-2 me-1"></i> Fork
+                            </a>
+                            <a href="https://github.com/hinditutorpoint/masaram-gondi/issues" target="_blank" class="btn btn-outline-dark btn-sm">
+                                <i class="bi bi-bug me-1"></i> Report Issue
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Buy Me a Coffee Card -->
+                <div class="col-md-6 col-lg-5">
+                    <div class="support-card coffee-card">
+                        <div class="support-icon coffee-icon">
+                            <i class="bi bi-cup-hot-fill"></i>
+                        </div>
+                        <h3 class="support-title">Buy Me a Coffee</h3>
+                        <p class="support-text">
+                            Love this project? Your support helps cover hosting, development time, 
+                            and keeps the coffee flowing! Every contribution, big or small, is appreciated.
+                        </p>
+                        <div class="coffee-tiers">
+                            <button class="coffee-tier" data-amount="3" onclick="selectCoffeeTier(this)">
+                                <span class="tier-icon">☕</span>
+                                <span class="tier-amount">$3</span>
+                            </button>
+                            <button class="coffee-tier active" data-amount="5" onclick="selectCoffeeTier(this)">
+                                <span class="tier-icon">☕☕</span>
+                                <span class="tier-amount">$5</span>
+                            </button>
+                            <button class="coffee-tier" data-amount="10" onclick="selectCoffeeTier(this)">
+                                <span class="tier-icon">☕☕☕</span>
+                                <span class="tier-amount">$10</span>
+                            </button>
+                            <button class="coffee-tier" data-amount="25" onclick="selectCoffeeTier(this)">
+                                <span class="tier-icon">🎁</span>
+                                <span class="tier-amount">$25</span>
+                            </button>
+                        </div>
+                        <a href="https://buymeacoffee.com/hinditutorpoint" target="_blank" class="btn btn-coffee btn-lg" id="coffeeBtn">
+                            <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="BMC" class="bmc-logo">
+                            Buy me a coffee
+                        </a>
+                        <div class="mt-3 other-support">
+                            <span class="text-muted small">Other ways to support:</span>
+                            <div class="mt-2">
+                                <a href="https://paypal.me/hinditutorpoint" target="_blank" class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="bi bi-paypal me-1"></i> PayPal
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Support Options -->
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-10">
+                    <div class="other-ways-card">
+                        <h4 class="text-center mb-4">
+                            <i class="bi bi-heart-fill text-danger me-2"></i>
+                            Other Ways to Support
+                        </h4>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="other-way-item">
+                                    <div class="other-way-icon">
+                                        <i class="bi bi-share-fill"></i>
+                                    </div>
+                                    <h5>Share</h5>
+                                    <p>Spread the word! Share this project on social media and with your friends.</p>
+                                    <div class="share-buttons">
+                                        <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20Masaram%20Gondi%20Transliterator!&url=https://github.com/hinditutorpoint/masaram-gondi" 
+                                           target="_blank" class="share-btn twitter" title="Share on Twitter">
+                                            <i class="bi bi-twitter-x"></i>
+                                        </a>
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/hinditutorpoint/masaram-gondi" 
+                                           target="_blank" class="share-btn facebook" title="Share on Facebook">
+                                            <i class="bi bi-facebook"></i>
+                                        </a>
+                                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/hinditutorpoint/masaram-gondi&title=Masaram%20Gondi%20Transliterator" 
+                                           target="_blank" class="share-btn linkedin" title="Share on LinkedIn">
+                                            <i class="bi bi-linkedin"></i>
+                                        </a>
+                                        <a href="https://wa.me/?text=Check%20out%20this%20amazing%20Masaram%20Gondi%20Transliterator!%20https://github.com/hinditutorpoint/masaram-gondi" 
+                                           target="_blank" class="share-btn whatsapp" title="Share on WhatsApp">
+                                            <i class="bi bi-whatsapp"></i>
+                                        </a>
+                                        <a href="https://t.me/share/url?url=https://github.com/hinditutorpoint/masaram-gondi&text=Check%20out%20this%20amazing%20Masaram%20Gondi%20Transliterator!" 
+                                           target="_blank" class="share-btn telegram" title="Share on Telegram">
+                                            <i class="bi bi-telegram"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="other-way-item">
+                                    <div class="other-way-icon">
+                                        <i class="bi bi-code-slash"></i>
+                                    </div>
+                                    <h5>Contribute</h5>
+                                    <p>Found a bug or have a feature idea? Contributions are always welcome!</p>
+                                    <a href="https://github.com/hinditutorpoint/masaram-gondi/blob/main/CONTRIBUTING.md" 
+                                       target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-git me-1"></i> Contributing Guide
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="other-way-item">
+                                    <div class="other-way-icon">
+                                        <i class="bi bi-chat-heart-fill"></i>
+                                    </div>
+                                    <h5>Feedback</h5>
+                                    <p>Your feedback helps us improve. Let us know what you think!</p>
+                                    <a href="https://github.com/hinditutorpoint/masaram-gondi/discussions" 
+                                       target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-chat-dots me-1"></i> Join Discussion
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sponsors Section -->
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-8 text-center">
+                    <div class="sponsors-section">
+                        <h4 class="mb-4">
+                            <i class="bi bi-trophy-fill text-warning me-2"></i>
+                            Our Supporters
+                        </h4>
+                        <p class="text-muted mb-4">
+                            A big thank you to all our supporters! Your contributions make this project possible.
+                        </p>
+                        <div class="sponsors-grid" id="sponsorsGrid">
+                            <!-- Placeholder avatars - replace with actual sponsors -->
+                            <div class="sponsor-avatar" title="Be the first sponsor!">
+                                <i class="bi bi-plus-lg"></i>
+                            </div>
+                        </div>
+                        <p class="mt-4">
+                            <a href="https://github.com/sponsors/hinditutorpoint" target="_blank" class="btn btn-outline-primary">
+                                <i class="bi bi-heart-fill me-2"></i> Become a Sponsor
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Features</h2>
+                <p class="section-subtitle">Everything you need for Gondi script transliteration</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-translate"></i>
+                        </div>
+                        <h3 class="feature-title">Multi-Mode Translation</h3>
+                        <p class="text-muted">
+                            Support for English (ITRANS) ↔ Gondi and Hindi ↔ Gondi bidirectional conversion.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-keyboard"></i>
+                        </div>
+                        <h3 class="feature-title">Virtual Keyboard</h3>
+                        <p class="text-muted">
+                            Built-in responsive virtual keyboard with touch support for mobile devices.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </div>
+                        <h3 class="feature-title">Undo/Redo</h3>
+                        <p class="text-muted">
+                            Full history support with undo/redo functionality and keyboard shortcuts.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-bar-chart"></i>
+                        </div>
+                        <h3 class="feature-title">Character Stats</h3>
+                        <p class="text-muted">
+                            Real-time character count and remaining limit display with visual indicators.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-share"></i>
+                        </div>
+                        <h3 class="feature-title">Save & Share</h3>
+                        <p class="text-muted">
+                            Download as text file or share via Web Share API with one click.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-phone"></i>
+                        </div>
+                        <h3 class="feature-title">Mobile Friendly</h3>
+                        <p class="text-muted">
+                            Fully responsive design with touch-optimized keyboard for mobile devices.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section class="section bg-light" id="installation">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Installation</h2>
+                <p class="section-subtitle">Get started in minutes</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <!-- Step 1 -->
+                    <div class="d-flex gap-3 mb-4 align-items-start">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4 class="step-title">Include Dependencies</h4>
+                            <p class="text-muted mb-3">Add jQuery and Bootstrap Icons to your HTML</p>
+                            <div class="code-block">
+                                <button class="copy-btn" data-copy="step1">
+                                    <i class="bi bi-clipboard"></i> Copy
+                                </button>
+                                <pre><code class="language-html" id="step1">&lt;!-- jQuery --&gt;
+&lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- Bootstrap Icons (for toolbar) --&gt;
+&lt;link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"&gt;
+
+&lt;!-- Gondi Font (optional but recommended) --&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Masaram+Gondi&display=swap" rel="stylesheet"&gt;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="d-flex gap-3 mb-4 align-items-start">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4 class="step-title">Include Plugin</h4>
+                            <p class="text-muted mb-3">Add the plugin script to your page</p>
+                            <div class="code-block">
+                                <button class="copy-btn" data-copy="step2">
+                                    <i class="bi bi-clipboard"></i> Copy
+                                </button>
+                                <pre><code class="language-html" id="step2">&lt;!-- Gondi Font (optional but recommended) --&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/hinditutorpoint/masaram-gondi/masaram-gondi-translator.js"&gt;&lt;/script&gt;
+&lt;!-- OR --&gt;
+&lt;script src="masaram-gondi-translator.js"&gt;&lt;/script&gt;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="d-flex gap-3 mb-4 align-items-start">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4 class="step-title">Create HTML Elements</h4>
+                            <p class="text-muted mb-3">Add input and output fields</p>
+                            <div class="code-block">
+                                <button class="copy-btn" data-copy="step3">
+                                    <i class="bi bi-clipboard"></i> Copy
+                                </button>
+                                <pre><code class="language-html" id="step3">&lt;input type="text" id="inputField" placeholder="Type here..."&gt;
+&lt;textarea id="outputField" readonly&gt;&lt;/textarea&gt;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="d-flex gap-3 align-items-start">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4 class="step-title">Initialize Plugin</h4>
+                            <p class="text-muted mb-3">Initialize with your desired options</p>
+                            <div class="code-block">
+                                <button class="copy-btn" data-copy="step4">
+                                    <i class="bi bi-clipboard"></i> Copy
+                                </button>
+                                <pre><code class="language-javascript" id="step4">$(function() {
+    $('#inputField').masaramTranslator({
+        target: '#outputField',
+        mode: 'en-gonm',
+        stat: true,
+        maxLength: 500,
+        tool: true,
+        keyboard: true
+    });
+});</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usage Examples Section -->
+    <section class="section" id="usage">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Usage Examples</h2>
+                <p class="section-subtitle">Different ways to use the plugin</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-3 mb-4">
+                    <div class="toc">
+                        <h5 class="toc-title">Examples</h5>
+                        <ul class="toc-list">
+                            <li><a href="#example-basic">Basic Usage</a></li>
+                            <li><a href="#example-all-features">All Features</a></li>
+                            <li><a href="#example-data-attr">Data Attributes</a></li>
+                            <li><a href="#example-multiple">Multiple Instances</a></li>
+                            <li><a href="#example-callbacks">Callbacks</a></li>
+                            <li><a href="#example-methods">API Methods</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-9">
+                    <!-- Basic Usage -->
+                    <div class="mb-5" id="example-basic">
+                        <h4 class="mb-3">
+                            <i class="bi bi-code-square text-primary me-2"></i>
+                            Basic Usage
+                        </h4>
+                        <div class="code-block">
+                            <button class="copy-btn" data-copy="code-basic">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre><code class="language-javascript" id="code-basic">// Simple initialization
+$('#inputField').masaramTranslator({
+    target: '#outputField',
+    mode: 'en-gonm'  // English to Gondi
+});
+
+// Hindi to Gondi
+$('#hindiInput').masaramTranslator({
+    target: '#gondiOutput',
+    mode: 'hi-gonm'
+});</code></pre>
+                        </div>
+                    </div>
+                    
+                    <!-- All Features -->
+                    <div class="mb-5" id="example-all-features">
+                        <h4 class="mb-3">
+                            <i class="bi bi-stars text-primary me-2"></i>
+                            All Features Enabled
+                        </h4>
+                        <div class="code-block">
+                            <button class="copy-btn" data-copy="code-all">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre><code class="language-javascript" id="code-all">$('#inputField').masaramTranslator({
+    target: '#outputField',
+    mode: 'en-gonm',
+    
+    // Stats bar
+    stat: true,
+    maxLength: 500,
+    
+    // Toolbar
+    tool: true,
+    toolButtons: ['undo', 'redo', 'save', 'share', 'copy', 'clear'],
+    
+    // Virtual keyboard
+    keyboard: true,
+    keyboardAutoHide: true,
+    keyboardHideDelay: 300,
+    
+    // Real-time translation
+    liveTranslate: true,
+    debounceDelay: 100
+});</code></pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Attributes -->
+                    <div class="mb-5" id="example-data-attr">
+                        <h4 class="mb-3">
+                            <i class="bi bi-braces text-primary me-2"></i>
+                            Using Data Attributes (Auto-Init)
+                        </h4>
+                        <div class="code-block">
+                            <button class="copy-btn" data-copy="code-data">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre><code class="language-html" id="code-data">&lt;!-- Input field with data attributes --&gt;
+&lt;input type="text" 
+       data-masaram-translator="input"
+       data-masaram-translator-target="#output"
+       data-masaram-translator-mode="en-gonm"
+       data-masaram-translator-stat="true"
+       data-masaram-translator-maxlength="300"
+       data-masaram-translator-tool="true"
+       data-masaram-translator-keyboard="true"
+       placeholder="Type here..."&gt;
+
+&lt;!-- Output field --&gt;
+&lt;textarea id="output" readonly&gt;&lt;/textarea&gt;
+
+&lt;!-- Plugin auto-initializes on page load! --&gt;</code></pre>
+                        </div>
+                        <div class="alert alert-tip mt-3">
+                            <i class="bi bi-lightbulb-fill me-2"></i>
+                            <strong>Tip:</strong> When using data attributes, the plugin automatically initializes on document ready!
+                        </div>
+                    </div>
+                    
+                    <!-- Multiple Instances -->
+                    <div class="mb-5" id="example-multiple">
+                        <h4 class="mb-3">
+                            <i class="bi bi-layers text-primary me-2"></i>
+                            Multiple Instances
+                        </h4>
+                        <div class="code-block">
+                            <button class="copy-btn" data-copy="code-multi">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre><code class="language-javascript" id="code-multi">// English to Gondi translator
+$('#enInput').masaramTranslator({
+    target: '#enOutput',
+    mode: 'en-gonm',
+    stat: true,
+    keyboard: true
+});
+
+// Hindi to Gondi translator
+$('#hiInput').masaramTranslator({
+    target: '#hiOutput',
+    mode: 'hi-gonm',
+    stat: true,
+    keyboard: true
+});
+
+// Gondi to English translator
+$('#gonmInput').masaramTranslator({
+    target: '#gonmOutput',
+    mode: 'gonm-en',
+    stat: true,
+    keyboard: true
+});</code></pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Callbacks -->
+                    <div class="mb-5" id="example-callbacks">
+                        <h4 class="mb-3">
+                            <i class="bi bi-arrow-repeat text-primary me-2"></i>
+                            With Callbacks
+                        </h4>
+                        <div class="code-block">
+                            <button class="copy-btn" data-copy="code-callbacks">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre><code class="language-javascript" id="code-callbacks">$('#inputField').masaramTranslator({
+    target: '#outputField',
+    mode: 'en-gonm',
+    stat: true,
+    tool: true,
+    keyboard: true,
+    
+    // Callback after initialization
+    onInit: function($source, $target) {
+        console.log('Translator initialized!');
+    },
+    
+    // Callback after each translation
+    onTranslate: function(input, output, mode) {
+        console.log('Translated:', input, '→', output);
+        // Update character count elsewhere
+        $('#charCount').text(output.length);
+    },
+    
+    // Callback on save
+    onSave: function(text) {
+        console.log('Saved:', text);
+    },
+    
+    // Callback on share
+    onShare: function(text) {
+        console.log('Shared:', text);
+    },
+    
+    // Callback on virtual key press
+    onKeyPress: function(key) {
+        console.log('Key pressed:', key);
+    },
+    
+    // Callback on error
+    onError: function(message) {
+        alert('Error: ' + message);
+    }
+});
+
+// Listen to custom event
+$('#inputField').on('masaram:translated', function(e, input, output, mode) {
+    console.log('Translation event fired!');
+});</code></pre>
+                        </div>
+                    </div>
+                    
+                    <!-- API Methods -->
+                    <div class="mb-5" id="example-methods">
+                        <h4 class="mb-3">
+                            <i class="bi bi-gear text-primary me-2"></i>
+                            API Methods
+                        </h4>
+                        <div class="code-block">
+                            <button class="copy-btn" data-copy="code-methods">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre><code class="language-javascript" id="code-methods">// Change translation mode
+$('#inputField').masaramTranslator('setMode', 'hi-gonm');
+
+// Get current mode
+const mode = $('#inputField').masaramTranslator('getMode');
+
+// Set input text programmatically
+$('#inputField').masaramTranslator('setInput', 'namaste');
+
+// Get output text
+const output = $('#inputField').masaramTranslator('getOutput');
+
+// Undo last change
+$('#inputField').masaramTranslator('undo');
+
+// Redo last undone change
+$('#inputField').masaramTranslator('redo');
+
+// Clear both fields
+$('#inputField').masaramTranslator('clear');
+
+// Save/Download output
+$('#inputField').masaramTranslator('save');
+
+// Share output
+$('#inputField').masaramTranslator('share');
+
+// Copy output to clipboard
+$('#inputField').masaramTranslator('copyOutput');
+
+// Show virtual keyboard
+$('#inputField').masaramTranslator('showKeyboard');
+
+// Hide virtual keyboard
+$('#inputField').masaramTranslator('hideKeyboard');
+
+// Toggle virtual keyboard
+$('#inputField').masaramTranslator('toggleKeyboard');
+
+// Manual translation
+$('#inputField').masaramTranslator('translate');
+
+// Destroy instance
+$('#inputField').masaramTranslator('destroy');
+
+// Direct translation (static method - no DOM)
+const result = $.masaramTranslator.translate('namaste', 'en-gonm');
+console.log(result); // 𑴟𑴤𑴫𑵄𑴛𑴺</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Reference Section -->
+    <section class="section bg-light" id="api">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">API Reference</h2>
+                <p class="section-subtitle">Complete list of options, methods, and events</p>
+            </div>
+            
+            <!-- Options Table -->
+            <h4 class="mb-4">
+                <i class="bi bi-sliders text-primary me-2"></i>
+                Options
+            </h4>
+            
+            <div class="table-responsive mb-5">
+                <table class="options-table">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>source</code></td>
+                            <td><span class="type-badge type-string">String</span></td>
+                            <td><code>null</code></td>
+                            <td>Source input selector (ID, class, or name)</td>
+                        </tr>
+                        <tr>
+                            <td><code>target</code></td>
+                            <td><span class="type-badge type-string">String</span></td>
+                            <td><code>null</code></td>
+                            <td>Target output selector (required)</td>
+                        </tr>
+                        <tr>
+                            <td><code>mode</code></td>
+                            <td><span class="type-badge type-string">String</span></td>
+                            <td><code>'en-gonm'</code></td>
+                            <td>Translation mode: <code>en-gonm</code>, <code>hi-gonm</code>, <code>gonm-en</code>, <code>gonm-hi</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>liveTranslate</code></td>
+                            <td><span class="type-badge type-boolean">Boolean</span></td>
+                            <td><code>true</code></td>
+                            <td>Enable real-time transliteration on input</td>
+                        </tr>
+                        <tr>
+                            <td><code>debounceDelay</code></td>
+                            <td><span class="type-badge type-number">Number</span></td>
+                            <td><code>100</code></td>
+                            <td>Debounce delay in milliseconds</td>
+                        </tr>
+                        <tr>
+                            <td><code>stat</code></td>
+                            <td><span class="type-badge type-boolean">Boolean</span></td>
+                            <td><code>false</code></td>
+                            <td>Show character count stats bar</td>
+                        </tr>
+                        <tr>
+                            <td><code>maxLength</code></td>
+                            <td><span class="type-badge type-number">Number</span></td>
+                            <td><code>500</code></td>
+                            <td>Maximum input character limit</td>
+                        </tr>
+                        <tr>
+                            <td><code>tool</code></td>
+                            <td><span class="type-badge type-boolean">Boolean</span></td>
+                            <td><code>false</code></td>
+                            <td>Show toolbar with action buttons</td>
+                        </tr>
+                        <tr>
+                            <td><code>toolButtons</code></td>
+                            <td><span class="type-badge type-array">Array</span></td>
+                            <td><code>['undo','redo','save','share']</code></td>
+                            <td>Toolbar buttons to show</td>
+                        </tr>
+                        <tr>
+                            <td><code>keyboard</code></td>
+                            <td><span class="type-badge type-boolean">Boolean</span></td>
+                            <td><code>false</code></td>
+                            <td>Show virtual keyboard</td>
+                        </tr>
+                        <tr>
+                            <td><code>keyboardAutoHide</code></td>
+                            <td><span class="type-badge type-boolean">Boolean</span></td>
+                            <td><code>true</code></td>
+                            <td>Auto-hide keyboard on blur</td>
+                        </tr>
+                        <tr>
+                            <td><code>keyboardHideDelay</code></td>
+                            <td><span class="type-badge type-number">Number</span></td>
+                            <td><code>300</code></td>
+                            <td>Keyboard hide delay in milliseconds</td>
+                        </tr>
+                        <tr>
+                            <td><code>onInit</code></td>
+                            <td><span class="type-badge type-function">Function</span></td>
+                            <td><code>null</code></td>
+                            <td>Callback after initialization</td>
+                        </tr>
+                        <tr>
+                            <td><code>onTranslate</code></td>
+                            <td><span class="type-badge type-function">Function</span></td>
+                            <td><code>null</code></td>
+                            <td>Callback after each translation</td>
+                        </tr>
+                        <tr>
+                            <td><code>onSave</code></td>
+                            <td><span class="type-badge type-function">Function</span></td>
+                            <td><code>null</code></td>
+                            <td>Callback after save/download</td>
+                        </tr>
+                        <tr>
+                            <td><code>onShare</code></td>
+                            <td><span class="type-badge type-function">Function</span></td>
+                            <td><code>null</code></td>
+                            <td>Callback after share</td>
+                        </tr>
+                        <tr>
+                            <td><code>onKeyPress</code></td>
+                            <td><span class="type-badge type-function">Function</span></td>
+                            <td><code>null</code></td>
+                            <td>Callback on virtual key press</td>
+                        </tr>
+                        <tr>
+                            <td><code>onError</code></td>
+                            <td><span class="type-badge type-function">Function</span></td>
+                            <td><code>null</code></td>
+                            <td>Callback on error</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Methods Table -->
+            <h4 class="mb-4">
+                <i class="bi bi-terminal text-primary me-2"></i>
+                Methods
+            </h4>
+            
+            <div class="table-responsive mb-5">
+                <table class="options-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Parameters</th>
+                            <th>Returns</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>setMode</code></td>
+                            <td><code>mode</code> (String)</td>
+                            <td>this</td>
+                            <td>Change translation mode</td>
+                        </tr>
+                        <tr>
+                            <td><code>getMode</code></td>
+                            <td>-</td>
+                            <td>String</td>
+                            <td>Get current mode</td>
+                        </tr>
+                        <tr>
+                            <td><code>setInput</code></td>
+                            <td><code>text</code> (String)</td>
+                            <td>this</td>
+                            <td>Set input text and translate</td>
+                        </tr>
+                        <tr>
+                            <td><code>getOutput</code></td>
+                            <td>-</td>
+                            <td>String</td>
+                            <td>Get translated output</td>
+                        </tr>
+                        <tr>
+                            <td><code>translate</code></td>
+                            <td><code>text</code> (optional)</td>
+                            <td>String</td>
+                            <td>Perform translation</td>
+                        </tr>
+                        <tr>
+                            <td><code>undo</code></td>
+                            <td>-</td>
+                            <td>this</td>
+                            <td>Undo last change</td>
+                        </tr>
+                        <tr>
+                            <td><code>redo</code></td>
+                            <td>-</td>
+                            <td>this</td>
+                            <td>Redo last undone change</td>
+                        </tr>
+                        <tr>
+                            <td><code>clear</code></td>
+                            <td>-</td>
+                            <td>this</td>
+                            <td>Clear input and output</td>
+                        </tr>
+                        <tr>
+                            <td><code>save</code></td>
+                            <td>-</td>
+                            <td>this</td>
+                            <td>Download output as text file</td>
+                        </tr>
+                        <tr>
+                            <td><code>share</code></td>
+                            <td>-</td>
+                            <td>this</td>
+                            <td>Share via Web Share API</td>
+                        </tr>
+                        <tr>
+                            <td><code>copyOutput</code></td>
+                            <td>-</td>
+                            <td>this</td>
+                            <td>Copy output to clipboard</td>
+                        </tr>
+                        <tr>
+                            <td><code>showKeyboard</code></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>Show virtual keyboard</td>
+                        </tr>
+                        <tr>
+                            <td><code>hideKeyboard</code></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>Hide virtual keyboard</td>
+                        </tr>
+                        <tr>
+                            <td><code>toggleKeyboard</code></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>Toggle keyboard visibility</td>
+                        </tr>
+                        <tr>
+                            <td><code>destroy</code></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>Remove plugin instance</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Translation Modes -->
+            <h4 class="mb-4">
+                <i class="bi bi-arrow-left-right text-primary me-2"></i>
+                Translation Modes
+            </h4>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card text-center">
+                        <h5><code>en-gonm</code></h5>
+                        <p class="mb-2">English → Gondi</p>
+                        <small class="text-muted">ITRANS transliteration</small>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card text-center">
+                        <h5><code>hi-gonm</code></h5>
+                        <p class="mb-2">हिंदी → Gondi</p>
+                        <small class="text-muted">Devanagari to Gondi</small>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card text-center">
+                        <h5><code>gonm-en</code></h5>
+                        <p class="mb-2">Gondi → English</p>
+                        <small class="text-muted">Gondi to ITRANS</small>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card text-center">
+                        <h5><code>gonm-hi</code></h5>
+                        <p class="mb-2">Gondi → हिंदी</p>
+                        <small class="text-muted">Gondi to Devanagari</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Character Map Section -->
+    <section class="section" id="charmap">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Character Map</h2>
+                <p class="section-subtitle">Masaram Gondi Unicode characters (U+11D00–U+11D5F)</p>
+            </div>
+            
+            <!-- Tabs -->
+            <ul class="nav nav-pills justify-content-center mb-4" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#vowels-tab">Vowels</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#consonants-tab">Consonants</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#matras-tab">Matras</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#numbers-tab">Numbers</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#special-tab">Special</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content">
+                <!-- Vowels -->
+                <div class="tab-pane fade show active" id="vowels-tab">
+                    <div class="char-map">
+                        <div class="char-item"><span class="char-gondi">𑴀</span><span class="char-latin">a</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴁</span><span class="char-latin">aa / ā</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴂</span><span class="char-latin">i</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴃</span><span class="char-latin">ii / ī</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴄</span><span class="char-latin">u</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴅</span><span class="char-latin">uu / ū</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴆</span><span class="char-latin">e</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴈</span><span class="char-latin">ai</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴉</span><span class="char-latin">o</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴋</span><span class="char-latin">au</span></div>
+                    </div>
+                </div>
+                
+                <!-- Consonants -->
+                <div class="tab-pane fade" id="consonants-tab">
+                    <div class="char-map">
+                        <div class="char-item"><span class="char-gondi">𑴌</span><span class="char-latin">k</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴍</span><span class="char-latin">kh</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴎</span><span class="char-latin">g</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴏</span><span class="char-latin">gh</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴐</span><span class="char-latin">ng</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴑</span><span class="char-latin">ch</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴒</span><span class="char-latin">chh</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴓</span><span class="char-latin">j</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴔</span><span class="char-latin">jh</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴕</span><span class="char-latin">ny</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴖</span><span class="char-latin">T</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴗</span><span class="char-latin">Th</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴘</span><span class="char-latin">D</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴙</span><span class="char-latin">Dh</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴚</span><span class="char-latin">N</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴛</span><span class="char-latin">t</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴜</span><span class="char-latin">th</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴝</span><span class="char-latin">d</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴞</span><span class="char-latin">dh</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴟</span><span class="char-latin">n</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴠</span><span class="char-latin">p</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴡</span><span class="char-latin">ph</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴢</span><span class="char-latin">b</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴣</span><span class="char-latin">bh</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴤</span><span class="char-latin">m</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴥</span><span class="char-latin">y</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴦</span><span class="char-latin">r</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴧</span><span class="char-latin">l</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴨</span><span class="char-latin">v/w</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴩</span><span class="char-latin">sh</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴪</span><span class="char-latin">Sh</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴫</span><span class="char-latin">s</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴬</span><span class="char-latin">h</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴭</span><span class="char-latin">L</span></div>
+                    </div>
+                </div>
+                
+                <!-- Matras -->
+                <div class="tab-pane fade" id="matras-tab">
+                    <div class="char-map">
+                        <div class="char-item"><span class="char-gondi">𑴱</span><span class="char-latin">aa</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴲</span><span class="char-latin">i</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴳</span><span class="char-latin">ii</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴴</span><span class="char-latin">u</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴵</span><span class="char-latin">uu</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴶</span><span class="char-latin">ri</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴺</span><span class="char-latin">e</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴼</span><span class="char-latin">ai</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴽</span><span class="char-latin">o</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴿</span><span class="char-latin">au</span></div>
+                    </div>
+                </div>
+                
+                <!-- Numbers -->
+                <div class="tab-pane fade" id="numbers-tab">
+                    <div class="char-map">
+                        <div class="char-item"><span class="char-gondi">𑵐</span><span class="char-latin">0</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵑</span><span class="char-latin">1</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵒</span><span class="char-latin">2</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵓</span><span class="char-latin">3</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵔</span><span class="char-latin">4</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵕</span><span class="char-latin">5</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵖</span><span class="char-latin">6</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵗</span><span class="char-latin">7</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵘</span><span class="char-latin">8</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵙</span><span class="char-latin">9</span></div>
+                    </div>
+                </div>
+                
+                <!-- Special -->
+                <div class="tab-pane fade" id="special-tab">
+                    <div class="char-map">
+                        <div class="char-item"><span class="char-gondi">𑴮</span><span class="char-latin">ksha (x)</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴯</span><span class="char-latin">gya (X)</span></div>
+                        <div class="char-item"><span class="char-gondi">𑴰</span><span class="char-latin">tra (Z)</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵀</span><span class="char-latin">anusvara</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵁</span><span class="char-latin">visarga</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵂</span><span class="char-latin">nukta</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵃</span><span class="char-latin">chandrabindu</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵄</span><span class="char-latin">halanta</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵅</span><span class="char-latin">virama</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵆</span><span class="char-latin">repha</span></div>
+                        <div class="char-item"><span class="char-gondi">𑵇</span><span class="char-latin">rakar</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ITRANS Reference -->
+    <section class="section bg-light" id="itrans">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">ITRANS Reference</h2>
+                <p class="section-subtitle">How to type Gondi using English keyboard</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h5 class="mb-3"><i class="bi bi-mic-fill text-primary me-2"></i> Vowels</h5>
+                        <table class="table table-sm masaram-text">
+                            <tr><td><code>a</code></td><td>→</td><td>𑴀</td><td>Short a</td></tr>
+                            <tr><td><code>aa</code> / <code>A</code></td><td>→</td><td>𑴁</td><td>Long aa</td></tr>
+                            <tr><td><code>i</code></td><td>→</td><td>𑴂</td><td>Short i</td></tr>
+                            <tr><td><code>ii</code> / <code>I</code> / <code>ee</code></td><td>→</td><td>𑴃</td><td>Long ii</td></tr>
+                            <tr><td><code>u</code></td><td>→</td><td>𑴄</td><td>Short u</td></tr>
+                            <tr><td><code>uu</code> / <code>U</code> / <code>oo</code></td><td>→</td><td>𑴅</td><td>Long uu</td></tr>
+                            <tr><td><code>e</code></td><td>→</td><td>𑴆</td><td>e</td></tr>
+                            <tr><td><code>ai</code></td><td>→</td><td>𑴈</td><td>ai</td></tr>
+                            <tr><td><code>o</code></td><td>→</td><td>𑴉</td><td>o</td></tr>
+                            <tr><td><code>au</code></td><td>→</td><td>𑴋</td><td>au</td></tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h5 class="mb-3"><i class="bi bi-info-circle text-primary me-2"></i> Special Keys</h5>
+                        <table class="table table-sm masaram-text">
+                            <tr><td><code>M</code></td><td>→</td><td>𑵀</td><td>Anusvara (after vowel)</td></tr>
+                            <tr><td><code>H</code></td><td>→</td><td>𑵁</td><td>Visarga (after vowel)</td></tr>
+                            <tr><td><code>MM</code></td><td>→</td><td>𑵃</td><td>Chandrabindu</td></tr>
+                            <tr><td><code>..</code></td><td>→</td><td>।</td><td>Danda</td></tr>
+                            <tr><td><code>...</code></td><td>→</td><td>॥</td><td>Double Danda</td></tr>
+                            <tr><td><code>x</code></td><td>→</td><td>𑴮</td><td>Ksha</td></tr>
+                            <tr><td><code>X</code></td><td>→</td><td>𑴯</td><td>Gya</td></tr>
+                            <tr><td><code>Z</code></td><td>→</td><td>𑴰</td><td>Tra</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert alert-tip mt-4">
+                <i class="bi bi-lightbulb-fill me-2"></i>
+                <strong>Tip:</strong> Use CAPITAL letters for aspirated consonants (kh=K, gh=G, etc.) and retroflex consonants (T, Th, D, Dh, N).
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="footer-title">
+                        <span style="font-family: var(--gondi-font);">𑴀</span> Masaram Gondi
+                    </h5>
+                    <p>
+                        A jQuery plugin for transliterating text between English, Hindi, and Masaram Gondi script. 
+                        Based on the Keyman keyboard by Rajesh Kumar Dhuriya.
+                    </p>
+                    <div class="social-links mt-3">
+                        <a href="https://github.com/hinditutorpoint" target="_blank" title="GitHub">
+                            <i class="bi bi-github"></i>
+                        </a>
+                        <a href="https://x.com/hinditutorpoint" title="Twitter">
+                            <i class="bi bi-twitter-x"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/rajesh-kumar-gaur-43052213b" title="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@rajesh_kumar_dhuriya" title="YouTube">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-6 col-lg-2">
+                    <h6 class="footer-title">Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#demo">Demo</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#installation">Installation</a></li>
+                        <li><a href="#usage">Usage</a></li>
+                        <li><a href="#api">API</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-6 col-lg-2">
+                    <h6 class="footer-title">Resources</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#charmap">Character Map</a></li>
+                        <li><a href="#itrans">ITRANS Guide</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Masaram_Gondi" target="_blank">Wikipedia</a></li>
+                        <li><a href="https://unicode.org/charts/PDF/U11D00.pdf" target="_blank">Unicode Chart</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4">
+                    <h6 class="footer-title">About Gondi Script</h6>
+                    <p class="small">
+                        Masaram Gondi is a script used to write the Gondi language, 
+                        spoken by the Gond people of central India. The script was added 
+                        to Unicode in version 10.0 (2017) in the range U+11D00–U+11D5F.
+                    </p>
+                </div>
+            </div>
+            
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 small">
+                        © 2024-25 Masaram Gondi Transliterator. MIT License.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0 small">
+                        Made with <i class="bi bi-heart-fill text-danger"></i> by 
+                        <a href="#">Rajesh Kumar Dhuriya</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" title="Scroll to top">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    
+    <!-- Masaram Gondi Translator Plugin -->
+    <script src="masaram-gondi-translator.js"></script>
+    
+    <script>
+        hljs.highlightAll();
+        $(function() {
+            
+            // Initialize demo translator
+            $('#demoInput').masaramTranslator({
+                target: '#demoOutput',
+                mode: 'en-gonm',
+                stat: true,
+                maxLength: 500,
+                tool: true,
+                toolButtons: ['undo', 'redo', 'save', 'share', 'copy', 'clear'],
+                keyboard: true,
+                keyboardAutoHide: true
+            });
+            
+            // Mode selector buttons
+            $('.mode-btn').on('click', function() {
+                const mode = $(this).data('mode');
+                $('.mode-btn').removeClass('active');
+                $(this).addClass('active');
+                $('#demoInput').masaramTranslator('setMode', mode);
+                $('#demoInput').val('').focus();
+                
+                // Update placeholder based on mode
+                const placeholders = {
+                    'en-gonm': 'Type here... e.g., namaste, gonDI, bhaaShaa',
+                    'hi-gonm': 'यहाँ टाइप करें... जैसे: नमस्ते, गोंडी, भाषा',
+                    'gonm-en': 'Type Gondi text... 𑴟𑴤𑴫𑵄𑴛𑴺',
+                    'gonm-hi': 'गोंडी टेक्स्ट टाइप करें... 𑴟𑴤𑴫𑵄𑴛𑴺'
+                };
+                $('#demoInput').attr('placeholder', placeholders[mode] || '');
+            });
+            
+            // Sample buttons
+            $('.sample-btn').on('click', function() {
+                const sample = $(this).data('sample');
+                $('#demoInput').masaramTranslator('setInput', sample);
+            });
+            
+            // Copy code buttons
+            $('.copy-btn').on('click', function() {
+                const targetId = $(this).data('copy');
+                const code = $('#' + targetId).text();
+                const $btn = $(this);
+                
+                navigator.clipboard.writeText(code).then(function() {
+                    $btn.addClass('copied').html('<i class="bi bi-check"></i> Copied!');
+                    setTimeout(function() {
+                        $btn.removeClass('copied').html('<i class="bi bi-clipboard"></i> Copy');
+                    }, 2000);
+                });
+            });
+            
+            // Theme toggle
+            $('#themeToggle').on('click', function() {
+                const html = document.documentElement;
+                const currentTheme = html.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-bs-theme', newTheme);
+                
+                $(this).find('i').toggleClass('bi-moon-fill bi-sun-fill');
+                
+                // Save preference
+                localStorage.setItem('theme', newTheme);
+            });
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-bs-theme', savedTheme);
+                if (savedTheme === 'dark') {
+                    $('#themeToggle i').removeClass('bi-moon-fill').addClass('bi-sun-fill');
+                }
+            }
+            
+            // Scroll to top button
+            $(window).on('scroll', function() {
+                if ($(this).scrollTop() > 300) {
+                    $('#scrollTop').addClass('visible');
+                } else {
+                    $('#scrollTop').removeClass('visible');
+                }
+            });
+            
+            $('#scrollTop').on('click', function() {
+                $('html, body').animate({ scrollTop: 0 }, 500);
+            });
+            
+            // Smooth scroll for anchor links
+            $('a[href^="#"]').on('click', function(e) {
+                const target = $($(this).attr('href'));
+                if (target.length) {
+                    e.preventDefault();
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 80
+                    }, 500);
+                }
+            });
+            
+            // Navbar scroll effect
+            $(window).on('scroll', function() {
+                if ($(this).scrollTop() > 50) {
+                    $('.navbar').addClass('shadow-sm');
+                } else {
+                    $('.navbar').removeClass('shadow-sm');
+                }
+            });
+        });
+    </script>
+    <script>
+        function selectCoffeeTier(btn) {
+            document.querySelectorAll('.coffee-tier').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Update Buy Me a Coffee link with amount (if BMC supports it)
+            const amount = btn.dataset.amount;
+            const coffeeBtn = document.getElementById('coffeeBtn');
+            // Note: BMC doesn't support custom amounts in URL, but you can track selection
+            console.log('Selected coffee amount: $' + amount);
+        }
+
+        async function fetchGitHubStats() {
+            try {
+                const response = await fetch('https://api.github.com/repos/hinditutorpoint/masaram-gondi');
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Animate count up
+                    animateCount('starCount', data.stargazers_count);
+                    animateCount('forkCount', data.forks_count);
+                    animateCount('watchCount', data.subscribers_count);
+                }
+            } catch (error) {
+                console.log('Could not fetch GitHub stats');
+                document.getElementById('starCount').textContent = '⭐';
+                document.getElementById('forkCount').textContent = '🍴';
+                document.getElementById('watchCount').textContent = '👁️';
+            }
+        }
+
+        // Animate count up
+        function animateCount(elementId, target) {
+            const element = document.getElementById(elementId);
+            const duration = 1500;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    clearInterval(timer);
+                    element.textContent = formatNumber(target);
+                } else {
+                    element.textContent = formatNumber(Math.floor(current));
+                }
+            }, 16);
+        }
+
+        // Format large numbers
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        // Fetch GitHub sponsors/contributors
+        async function fetchSponsors() {
+            try {
+                // Fetch contributors as a proxy for sponsors display
+                const response = await fetch('https://api.github.com/repos/hinditutorpoint/masaram-gondi/contributors?per_page=10');
+                if (response.ok) {
+                    const contributors = await response.json();
+                    const grid = document.getElementById('sponsorsGrid');
+                    
+                    if (contributors.length > 0) {
+                        grid.innerHTML = '';
+                        contributors.forEach(contributor => {
+                            const avatar = document.createElement('a');
+                            avatar.href = contributor.html_url;
+                            avatar.target = '_blank';
+                            avatar.className = 'sponsor-avatar';
+                            avatar.title = contributor.login;
+                            avatar.innerHTML = `<img src="${contributor.avatar_url}" alt="${contributor.login}">`;
+                            grid.appendChild(avatar);
+                        });
+                        
+                        // Add "become sponsor" placeholder
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'sponsor-avatar';
+                        placeholder.title = 'Become a sponsor!';
+                        placeholder.innerHTML = '<i class="bi bi-plus-lg"></i>';
+                        placeholder.onclick = () => window.open('https://github.com/hinditutorpoint/masaram-gondi', '_blank');
+                        grid.appendChild(placeholder);
+                    }
+                }
+            } catch (error) {
+                console.log('Could not fetch sponsors');
+            }
+        }
+
+        // Initialize on page load
+        $(document).ready(function() {
+            // Fetch GitHub stats when support section is in view
+            const supportSection = document.getElementById('support');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        fetchGitHubStats();
+                        fetchSponsors();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+            
+            if (supportSection) {
+                observer.observe(supportSection);
+            }
+        });
+
+        // Share functionality
+        function shareProject(platform) {
+            const url = encodeURIComponent('https://github.com/hinditutorpoint/masaram-gondi');
+            const text = encodeURIComponent('Check out this amazing Masaram Gondi Transliterator! A jQuery plugin to convert English/Hindi to Gondi script. #GondiScript #OpenSource');
+            
+            const shareUrls = {
+                twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${encodeURIComponent('Masaram Gondi Transliterator')}`,
+                whatsapp: `https://wa.me/?text=${text}%20${url}`,
+                telegram: `https://t.me/share/url?url=${url}&text=${text}`
+            };
+            
+            window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+        }
+    </script>
+</body>
+</html>
