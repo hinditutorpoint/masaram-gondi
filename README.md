@@ -1,414 +1,349 @@
-# Masaram Gondi Transliterator
+# Masaram Gondi Direct Typing Plugin
 
-A powerful jQuery plugin for converting English (ITRANS) and Hindi text to Masaram Gondi script. Features include virtual keyboard, undo/redo, character statistics, and more.
+A professional jQuery plugin for typing in Masaram Gondi script with ITRANS/Hindi input, virtual keyboard, smart suggestions, and complete Unicode support (U+11D00–U+11D5F).
 
-![Masaram Gondi Transliterator](https://img.shields.io/badge/Masaram_Gondi-Transliterator-blue)
-![Version](https://img.shields.io/badge/version-4.0.0-green)
+![Masaram Gondi Direct Typing](https://img.shields.io/badge/Masaram_Gondi-Direct_Typing-blue)
+![Version](https://img.shields.io/badge/version-5.7.0-green)
 ![License](https://img.shields.io/badge/license-MIT-yellow)
-![jQuery](https://img.shields.io/badge/jQuery-Plugin-blue)
+![jQuery](https://img.shields.io/badge/jQuery-3.0%2B-blue)
+![Unicode](https://img.shields.io/badge/Unicode-U%2B11D00--U%2B11D5F-purple)
 
 ## 📋 Table of Contents
 
 - [Features](#features)
-- [Demo](#demo)
+- [Live Demo](#live-demo)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Usage Examples](#usage-examples)
 - [API Reference](#api-reference)
-- [Translation Modes](#translation-modes)
-- [Character Map](#character-map)
-- [ITRANS Reference](#itrans-reference)
+- [Keyboard Layouts](#keyboard-layouts)
+- [ITRANS Input Reference](#itrans-input-reference)
+- [Masaram Gondi Characters](#masaram-gondi-characters)
 - [Support](#support)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## ✨ Features
 
-- **Multi-Mode Translation**: Support for English (ITRANS) ↔ Gondi and Hindi ↔ Gondi bidirectional conversion
-- **Virtual Keyboard**: Built-in responsive virtual keyboard with touch support for mobile devices
-- **Undo/Redo**: Full history support with undo/redo functionality and keyboard shortcuts
-- **Character Stats**: Real-time character count and remaining limit display with visual indicators
-- **Save & Share**: Download as text file or share via Web Share API with one click
-- **Mobile Friendly**: Fully responsive design with touch-optimized keyboard for mobile devices
+- **Dual Input Modes**: Type in English (ITRANS) or Hindi (Devanagari) and get instant Gondi output with intelligent transliteration
+- **3D Virtual Keyboard**: Realistic QWERTY-style keyboard with 3D effects, fully responsive for mobile, tablet, and desktop
+- **Smart Suggestions**: Get word suggestions as you type with support for custom dictionary and RESTful API integration
+- **Translation Panel**: View input, Gondi, and Hindi translations side by side in a beautiful, interactive panel
+- **State Persistence**: All settings automatically saved to localStorage - mode, keyboard, suggestions state preserved
+- **Fully Responsive**: Works perfectly on all devices with touch-optimized UI, bottom sheets, and adaptive layouts
+- **Context Menu**: Right-click or long-press for quick access to copy, paste, mode switch, keyboard toggle, and more
+- **Edit Mode Support**: Load existing Gondi text from database and continue editing seamlessly with preserved content
+- **Dark Mode Ready**: Automatic dark mode support based on system preferences with beautiful color schemes
+- **Accessibility First**: Full keyboard navigation, focus indicators, reduced motion support, and screen reader friendly
+- **Zero Configuration**: Just add `data-masaram-gondi` attribute to any input/textarea and you're ready to go!
+- **100% Unicode**: Uses official Masaram Gondi Unicode block (U+11D00–U+11D5F) - future-proof and standard
 
-## 🎯 Demo
+## 🎯 Live Demo
 
 Try the live demo at: [https://hinditutorpoint.github.io/masaram-gondi/](https://hinditutorpoint.github.io/masaram-gondi/)
 
-Or open `index.html` in your browser to see the demo.
+Or open `index.html` in your browser to see the interactive demo with multiple input modes, virtual keyboard, and smart suggestions.
 
 ## 📦 Installation
 
+### Prerequisites
+
+- jQuery 3.0+
+- A font that supports Masaram Gondi Unicode (U+11D00–U+11D5F) - [Noto Sans Masaram Gondi](https://fonts.google.com/noto/specimen/Noto+Sans+Masaram+Gondi)
+
 ### Step 1: Include Dependencies
 
-Add jQuery and Bootstrap Icons to your HTML:
-
 ```html
-<!-- jQuery -->
+<!-- jQuery (required) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Bootstrap Icons (for toolbar) -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-
-<!-- Gondi Font (optional but recommended) -->
+<!-- Gondi Font (Google Fonts) -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Masaram+Gondi&display=swap" rel="stylesheet">
 ```
 
-### Step 2: Include Plugin
-
-Add the plugin script to your page:
+### Step 2: Include Plugin Files
 
 ```html
-<!-- Gondi Font (optional but recommended) -->
-<script src="https://cdn.jsdelivr.net/gh/hinditutorpoint/masaram-gondi/masaram-gondi-translator.js"></script>
-<!-- OR -->
-<script src="masaram-gondi-translator.js"></script>
+<!-- Plugin CSS -->
+<link rel="stylesheet" href="css/masaram.css">
+
+<!-- Plugin JavaScript (Core Engine) -->
+<script src="js/masaram-gondi-core.js"></script>
+
+<!-- Plugin JavaScript (UI Components) -->
+<script src="js/masaram-gondi-plugin.js"></script>
 ```
 
-### Step 3: Create HTML Elements
-
-Add input and output fields:
+### Step 3: Add to Your HTML
 
 ```html
-<input type="text" id="inputField" placeholder="Type here...">
-<textarea id="outputField" readonly></textarea>
+<input type="text" data-masaram-gondi data-keyboard="true" placeholder="Type here...">
 ```
 
-### Step 4: Initialize Plugin
-
-Initialize with your desired options:
-
-```javascript
-$(function() {
-    $('#inputField').masaramTranslator({
-        target: '#outputField',
-        mode: 'en-gonm',
-        stat: true,
-        maxLength: 500,
-        tool: true,
-        keyboard: true
-    });
-});
-```
+**That's it!** The plugin will auto-initialize on page load. No JavaScript needed!
 
 ## 🚀 Usage Examples
 
-### Basic Usage
-
-```javascript
-// Simple initialization
-$('#inputField').masaramTranslator({
-    target: '#outputField',
-    mode: 'en-gonm'  // English to Gondi
-});
-
-// Hindi to Gondi
-$('#hindiInput').masaramTranslator({
-    target: '#gondiOutput',
-    mode: 'hi-gonm'
-});
-```
-
-### All Features Enabled
-
-```javascript
-$('#inputField').masaramTranslator({
-    target: '#outputField',
-    mode: 'en-gonm',
-    
-    // Stats bar
-    stat: true,
-    maxLength: 500,
-    
-    // Toolbar
-    tool: true,
-    toolButtons: ['undo', 'redo', 'save', 'share', 'copy', 'clear'],
-    
-    // Virtual keyboard
-    keyboard: true,
-    keyboardAutoHide: true,
-    keyboardHideDelay: 300,
-    
-    // Real-time translation
-    liveTranslate: true,
-    debounceDelay: 100
-});
-```
-
-### Using Data Attributes (Auto-Init)
+### HTML Attributes (Zero Configuration)
 
 ```html
-<!-- Input field with data attributes -->
-<input type="text" 
-       data-masaram-translator="input"
-       data-masaram-translator-target="#output"
-       data-masaram-translator-mode="en-gonm"
-       data-masaram-translator-stat="true"
-       data-masaram-translator-maxlength="300"
-       data-masaram-translator-tool="true"
-       data-masaram-translator-keyboard="true"
-       placeholder="Type here...">
+<!-- Basic Input with Virtual Keyboard -->
+<input type="text" data-masaram-gondi data-keyboard="true" placeholder="Type here...">
 
-<!-- Output field -->
-<textarea id="output" readonly></textarea>
+<!-- English (ITRANS) Input with Smart Suggestions -->
+<input type="text" data-masaram-gondi data-mode="en" data-keyboard="true" data-suggestions="true" placeholder="Try: namaste, gondi, dhanyavaad">
 
-<!-- Plugin auto-initializes on page load! -->
+<!-- Hindi (Devanagari) Input Mode -->
+<input type="text" data-masaram-gondi data-mode="hi" data-keyboard="true" data-keyboard-layout="hindi" placeholder="नमस्ते, गोंडी, धन्यवाद">
+
+<!-- Virtual Keyboard with Auto-Show -->
+<input type="text" data-masaram-gondi data-keyboard="true" data-keyboard-auto-show="true" placeholder="Click here to show keyboard">
+
+<!-- Textarea with All Features -->
+<textarea data-masaram-gondi data-keyboard="true" data-suggestions="true" rows="5" placeholder="Type your story in Gondi..."></textarea>
+
+<!-- With Translation Panel -->
+<input type="text" data-masaram-gondi data-translate="true" data-keyboard="true" placeholder="Type to see translations">
 ```
 
-> **Tip:** When using data attributes, the plugin automatically initializes on document ready!
-
-### Multiple Instances
+### JavaScript Initialization
 
 ```javascript
-// English to Gondi translator
-$('#enInput').masaramTranslator({
-    target: '#enOutput',
-    mode: 'en-gonm',
-    stat: true,
-    keyboard: true
-});
+// Basic initialization
+$('#myInput').masaramGondi();
 
-// Hindi to Gondi translator
-$('#hiInput').masaramTranslator({
-    target: '#hiOutput',
-    mode: 'hi-gonm',
-    stat: true,
-    keyboard: true
-});
-
-// Gondi to English translator
-$('#gonmInput').masaramTranslator({
-    target: '#gonmOutput',
-    mode: 'gonm-en',
-    stat: true,
-    keyboard: true
-});
-```
-
-### With Callbacks
-
-```javascript
-$('#inputField').masaramTranslator({
-    target: '#outputField',
-    mode: 'en-gonm',
-    stat: true,
-    tool: true,
-    keyboard: true,
+// With options
+$('#myInput').masaramGondi({
+    mode: 'en',              // 'en' or 'hi'
+    keyboard: true,          // Enable virtual keyboard
+    keyboardLayout: 'itrans', // 'itrans', 'hindi', or 'gondi'
+    suggestions: true,       // Enable word suggestions
+    translate: true,         // Enable translation panel
+    persistKey: 'my-unique-input', // localStorage key for state persistence
     
-    // Callback after initialization
-    onInit: function($source, $target) {
-        console.log('Translator initialized!');
+    // Callbacks
+    onInput: function(char, buffer, gondi) {
+        console.log('Typed:', char);
     },
-    
-    // Callback after each translation
-    onTranslate: function(input, output, mode) {
-        console.log('Translated:', input, '→', output);
-        // Update character count elsewhere
-        $('#charCount').text(output.length);
-    },
-    
-    // Callback on save
-    onSave: function(text) {
-        console.log('Saved:', text);
-    },
-    
-    // Callback on share
-    onShare: function(text) {
-        console.log('Shared:', text);
-    },
-    
-    // Callback on virtual key press
-    onKeyPress: function(key) {
-        console.log('Key pressed:', key);
-    },
-    
-    // Callback on error
-    onError: function(message) {
-        alert('Error: ' + message);
+    onChange: function(buffer, gondi) {
+        console.log('Gondi:', gondi);
     }
 });
+```
 
-// Listen to custom event
-$('#inputField').on('masaram:translated', function(e, input, output, mode) {
-    console.log('Translation event fired!');
+### Custom Suggestions
+
+```javascript
+$('#myInput').masaramGondi({
+    suggestions: true,
+    suggestionsData: {
+        'gondi': 'गोंडी',
+        'bhasha': 'भाषा',
+        'lipi': 'लिपि',
+        'aakhar': 'अक्षर'
+    }
+});
+```
+
+### API Suggestions (RESTful)
+
+```javascript
+$('#myInput').masaramGondi({
+    suggestionsApi: '/api/suggestions',
+    suggestionsApiMethod: 'GET',
+    suggestionsApiParam: 'q',
+    suggestionsApiDebounce: 300,
+    suggestionsApiTransform: function(response) {
+        return response.data.map(item => ({
+            roman: item.word,
+            hindi: item.devanagari,
+            gondi: item.gondi
+        }));
+    }
 });
 ```
 
 ## 📚 API Reference
 
-### Options
+### Instance Methods
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `source` | String | `null` | Source input selector (ID, class, or name) |
-| `target` | String | `null` | Target output selector (required) |
-| `mode` | String | `'en-gonm'` | Translation mode: `en-gonm`, `hi-gonm`, `gonm-en`, `gonm-hi` |
-| `liveTranslate` | Boolean | `true` | Enable real-time transliteration on input |
-| `debounceDelay` | Number | `100` | Debounce delay in milliseconds |
-| `stat` | Boolean | `false` | Show character count stats bar |
-| `maxLength` | Number | `500` | Maximum input character limit |
-| `tool` | Boolean | `false` | Show toolbar with action buttons |
-| `toolButtons` | Array | `['undo','redo','save','share']` | Toolbar buttons to show |
-| `keyboard` | Boolean | `false` | Show virtual keyboard |
-| `keyboardAutoHide` | Boolean | `true` | Auto-hide keyboard on blur |
-| `keyboardHideDelay` | Number | `300` | Keyboard hide delay in milliseconds |
-| `onInit` | Function | `null` | Callback after initialization |
-| `onTranslate` | Function | `null` | Callback after each translation |
-| `onSave` | Function | `null` | Callback after save/download |
-| `onShare` | Function | `null` | Callback after share |
-| `onKeyPress` | Function | `null` | Callback on virtual key press |
-| `onError` | Function | `null` | Callback on error |
-
-### Methods
-
-| Method | Parameters | Returns | Description |
-|--------|------------|---------|-------------|
-| `setMode` | `mode` (String) | this | Change translation mode |
-| `getMode` | - | String | Get current mode |
-| `setInput` | `text` (String) | this | Set input text and translate |
-| `getOutput` | - | String | Get translated output |
-| `translate` | `text` (optional) | String | Perform translation |
-| `undo` | - | this | Undo last change |
-| `redo` | - | this | Redo last undone change |
-| `clear` | - | this | Clear input and output |
-| `save` | - | this | Download output as text file |
-| `share` | - | this | Share via Web Share API |
-| `copyOutput` | - | this | Copy output to clipboard |
-| `showKeyboard` | - | - | Show virtual keyboard |
-| `hideKeyboard` | - | - | Hide virtual keyboard |
-| `toggleKeyboard` | - | - | Toggle keyboard visibility |
-| `destroy` | - | - | Remove plugin instance |
+| Method | Parameters | Description |
+|--------|------------|-------------|
+| `getValue()` | - | Get Roman buffer (input text) |
+| `getGondiValue()` | - | Get Gondi output text |
+| `setValue(text)` | text | Set Roman buffer value |
+| `setGondiValue(text)` | text | Set Gondi value directly (for edit) |
+| `clear()` | - | Clear all content |
+| `setMode(mode)` | 'en' or 'hi' | Switch mode |
+| `getMode()` | - | Get current mode |
+| `showKeyboard()` | - | Show virtual keyboard |
+| `hideKeyboard()` | - | Hide virtual keyboard |
+| `toggleKeyboard()` | - | Toggle keyboard visibility |
+| `enableKeyboard()` | - | Enable keyboard |
+| `disableKeyboard()` | - | Disable keyboard |
+| `enableSuggestions()` | - | Enable suggestions |
+| `disableSuggestions()` | - | Disable suggestions |
+| `addSuggestion(r, h)` | roman, hindi | Add custom suggestion |
+| `destroy()` | - | Destroy plugin instance |
 
 ### Static Methods
 
 ```javascript
-// Direct translation (static method - no DOM)
-const result = $.masaramTranslator.translate('namaste', 'en-gonm');
-console.log(result); // 𑴟𑴤𑴫𑵄𑴛𑴺
+// English to Gondi
+var gondi = $.masaramGondi.transliterate('namaste', 'en');
+
+// Hindi to Gondi (shorthand)
+var gondi = $.masaramGondi.t('नमस्ते', 'hi');
+
+// Global function (shorthand)
+var gondi = transliterate('gondi');
 ```
 
-## 🔄 Translation Modes
+### Configuration Options
 
-| Mode | Description | Example |
-|------|-------------|---------|
-| `en-gonm` | English → Gondi | `namaste` → `𑴟𑴤𑴫𑵄𑴛𑴺` |
-| `hi-gonm` | हिंदी → Gondi | `नमस्ते` → `𑴟𑴤𑴫𑵄𑴛𑴺` |
-| `gonm-en` | Gondi → English | `𑴟𑴤𑴫𑵄𑴛𑴺` → `namaste` |
-| `gonm-hi` | Gondi → हिंदी | `𑴟𑴤𑴫𑵄𑴛𑴺` → `नमस्ते` |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `mode` | String | 'en' | Input mode: 'en' (ITRANS) or 'hi' (Hindi) |
+| `keyboard` | Boolean | false | Enable virtual keyboard |
+| `keyboardLayout` | String | 'itrans' | Keyboard layout: 'itrans', 'hindi', 'gondi' |
+| `keyboardAutoShow` | Boolean | true | Auto-show keyboard on focus |
+| `keyboardAutoHide` | Boolean | true | Auto-hide keyboard on blur |
+| `suggestions` | Boolean | true | Enable word suggestions |
+| `suggestionsApi` | String | null | API endpoint for suggestions |
+| `translate` | Boolean | false | Enable translation panel |
+| `popup` | Boolean | true | Enable context menu |
+| `persistState` | Boolean | true | Save settings to localStorage |
+| `persistKey` | String | 'default' | localStorage key name |
 
-## 🔤 Character Map
+## ⌨️ Keyboard Layouts
 
-Masaram Gondi Unicode characters (U+11D00–U+11D5F)
+### ITRANS Layout
+- Standard English QWERTY layout with ITRANS transliteration scheme
+- Shift key for capitals
+- Perfect for English users
+- Phonetic input scheme
+
+### Hindi Layout (हिंदी)
+- Devanagari script layout for Hindi-speaking users
+- Hindi consonants & vowels
+- Matra row for modifiers
+- Direct Hindi to Gondi
+- Special conjuncts (क्ष, त्र)
+
+### Gondi Layout (𑴦𑴺𑴎𑴲)
+- Native Masaram Gondi script layout for direct input
+- Direct Gondi characters
+- Vowels & marks rows
+- Unicode U+11D00–11D5F
+- Visual reference layout
+
+## � ITRANS Input Reference
 
 ### Vowels
 
-| Latin | Gondi | Description |
-|-------|-------|-------------|
-| `a` | 𑴀 | Short a |
-| `aa` / `A` / `ā` | 𑴁 | Long aa |
-| `i` | 𑴂 | Short i |
-| `ii` / `I` / `ee` / `ī` | 𑴃 | Long ii |
-| `u` | 𑴄 | Short u |
-| `uu` / `U` / `oo` / `ū` | 𑴅 | Long uu |
-| `e` | 𑴆 | e |
-| `ai` | 𑴈 | ai |
-| `o` | 𑴉 | o |
-| `au` | 𑴋 | au |
+| Category | Input Examples | Output Examples |
+|----------|----------------|-----------------|
+| **Vowels** | `a aa i ii u uu e ai o au` | 𑴀 𑴁 𑴂 𑴃 𑴄 𑴅 𑴆 𑴈 𑴉 𑴋 |
 
 ### Consonants
 
-| Latin | Gondi | Latin | Gondi |
-|-------|-------|-------|-------|
-| `k` | 𑴌 | `kh` | 𑴍 |
-| `g` | 𑴎 | `gh` | 𑴏 |
-| `ng` | 𑴐 | `ch` | 𑴑 |
-| `chh` | 𑴒 | `j` | 𑴓 |
-| `jh` | 𑴔 | `ny` | 𑴕 |
-| `T` | 𑴖 | `Th` | 𑴗 |
-| `D` | 𑴘 | `Dh` | 𑴙 |
-| `N` | 𑴚 | `t` | 𑴛 |
-| `th` | 𑴜 | `d` | 𑴝 |
-| `dh` | 𑴞 | `n` | 𑴟 |
-| `p` | 𑴠 | `ph` | 𑴡 |
-| `b` | 𑴢 | `bh` | 𑴣 |
-| `m` | 𑴤 | `y` | 𑴥 |
-| `r` | 𑴦 | `l` | 𑴧 |
-| `v` / `w` | 𑴨 | `sh` | 𑴩 |
-| `Sh` | 𑴪 | `s` | 𑴫 |
-| `h` | 𑴬 | `L` | 𑴭 |
+| Category | Input Examples | Output Examples |
+|----------|----------------|-----------------|
+| **Velars** | `k kh g gh ng` | 𑴌 𑴍 𑴎 𑴏 𑴐 |
+| **Palatals** | `ch chh j jh ny` | 𑴑 𑴒 𑴓 𑴔 𑴕 |
+| **Retroflexes** | `T Th D Dh N` | 𑴖 𑴗 𑴘 𑴙 𑴚 |
+| **Dentals** | `t th d dh n` | 𑴛 𑴜 𑴝 𑴞 𑴟 |
+| **Labials** | `p ph b bh m` | 𑴠 𑴡 𑴢 𑴣 𑴤 |
+| **Semivowels** | `y r l v` | 𑴥 𑴦 𑴧 𑴨 |
+| **Sibilants** | `sh Sh s h` | 𑴩 𑴪 𑴫 𑴬 |
+| **Special** | `M (ं) H (ः) .N (ँ)` | 𑵀 𑵁 𑵃 |
+| **Numbers** | `0 1 2 3 4 5 6 7 8 9` | 𑵐 𑵑 𑵒 𑵓 𑵔 𑵕 𑵖 𑵗 𑵘 𑵙 |
 
-### Matras (Vowel Signs)
+## � Masaram Gondi Characters
 
-| Latin | Gondi | Latin | Gondi |
-|-------|-------|-------|-------|
-| `aa` | 𑴱 | `i` | 𑴲 |
-| `ii` | 𑴳 | `u` | 𑴴 |
-| `uu` | 𑴵 | `ri` | 𑴶 |
-| `e` | 𑴺 | `ai` | 𑴼 |
-| `o` | 𑴽 | `au` | 𑴿 |
+Masaram Gondi Unicode characters (U+11D00–U+11D5F)
 
-### Numbers
+### Independent Vowels (11 characters)
 
-| Arabic | Gondi |
-|--------|-------|
-| 0 | 𑵐 |
-| 1 | 𑵑 |
-| 2 | 𑵒 |
-| 3 | 𑵓 |
-| 4 | 𑵔 |
-| 5 | 𑵕 |
-| 6 | 𑵖 |
-| 7 | 𑵗 |
-| 8 | 𑵘 |
-| 9 | 𑵙 |
+| Character | Unicode | Name | ITRANS |
+|-----------|---------|------|--------|
+| 𑴀 | U+11D00 | LETTER A | `a` |
+| 𑴁 | U+11D01 | LETTER AA | `aa, A` |
+| 𑴂 | U+11D02 | LETTER I | `i` |
+| 𑴃 | U+11D03 | LETTER II | `ii, I` |
+| 𑴄 | U+11D04 | LETTER U | `u` |
+| 𑴅 | U+11D05 | LETTER UU | `uu, U` |
+| 𑴆 | U+11D06 | LETTER E | `e` |
+| 𑴇 | U+11D07 | LETTER VOCALIC R | `Ri, RRi` |
+| 𑴈 | U+11D08 | LETTER AI | `ai` |
+| 𑴉 | U+11D09 | LETTER O | `o` |
+| 𑴋 | U+11D0B | LETTER AU | `au` |
 
-### Special Characters
+### Consonants (36 characters)
 
-| Latin | Gondi | Description |
-|-------|-------|-------------|
-| `x` | 𑴮 | Ksha |
-| `X` | 𑴯 | Gya |
-| `Z` | 𑴰 | Tra |
-| `M` | 𑵀 | Anusvara |
-| `H` | 𑵁 | Visarga |
-| `MM` | 𑵃 | Chandrabindu |
-| `..` | । | Danda |
-| `...` | ॥ | Double Danda |
-| `..` | 𑵄 | Halanta |
-| `..` | 𑵅 | Virama |
-| `..` | 𑵆 | Repha |
-| `..` | 𑵇 | Rakar |
+| Character | Unicode | Name | ITRANS |
+|-----------|---------|------|--------|
+| 𑴌 | U+11D0C | LETTER KA | `k` |
+| 𑴍 | U+11D0D | LETTER KHA | `kh` |
+| 𑴎 | U+11D0E | LETTER GA | `g` |
+| 𑴏 | U+11D0F | LETTER GHA | `gh` |
+| 𑴐 | U+11D10 | LETTER NGA | `ng` |
+| 𑴑 | U+11D11 | LETTER CA | `ch, c` |
+| 𑴒 | U+11D12 | LETTER CHA | `chh` |
+| 𑴓 | U+11D13 | LETTER JA | `j` |
+| 𑴔 | U+11D14 | LETTER JHA | `jh` |
+| 𑴕 | U+11D15 | LETTER NYA | `ny` |
+| 𑴖 | U+11D16 | LETTER TTA | `T` |
+| 𑴗 | U+11D17 | LETTER TTHA | `Th` |
+| 𑴘 | U+11D18 | LETTER DDA | `D` |
+| 𑴙 | U+11D19 | LETTER DDHA | `Dh` |
+| 𑴚 | U+11D1A | LETTER NNA | `N` |
+| 𑴛 | U+11D1B | LETTER TA | `t` |
+| 𑴜 | U+11D1C | LETTER THA | `th` |
+| 𑴝 | U+11D1D | LETTER DA | `d` |
+| 𑴞 | U+11D1E | LETTER DHA | `dh` |
+| 𑴟 | U+11D1F | LETTER NA | `n` |
+| 𑴠 | U+11D20 | LETTER PA | `p` |
+| 𑴡 | U+11D21 | LETTER PHA | `ph` |
+| 𑴢 | U+11D22 | LETTER BA | `b` |
+| 𑴣 | U+11D23 | LETTER BHA | `bh` |
+| 𑴤 | U+11D24 | LETTER MA | `m` |
+| 𑴥 | U+11D25 | LETTER YA | `y` |
+| 𑴦 | U+11D26 | LETTER RA | `r` |
+| 𑴧 | U+11D27 | LETTER LA | `l` |
+| 𑴨 | U+11D28 | LETTER VA | `v` |
+| 𑴩 | U+11D29 | LETTER SHA | `sh` |
+| 𑴪 | U+11D2A | LETTER SSA | `Sh, S` |
+| 𑴫 | U+11D2B | LETTER SA | `s` |
+| 𑴬 | U+11D2C | LETTER HA | `h` |
+| 𑴭 | U+11D2D | LETTER LLA | `L` |
 
-## 📝 ITRANS Reference
+### Diacritical Marks
 
-### Vowels
+| Character | Unicode | Name |
+|-----------|---------|------|
+| 𑵀 | U+11D40 | ANUSVARA |
+| 𑵁 | U+11D41 | VISARGA |
+| 𑵂 | U+11D42 | NUKTA |
+| 𑵃 | U+11D43 | CHANDRABINDU |
+| 𑵄 | U+11D44 | HALANTA |
+| 𑵅 | U+11D45 | VIRAMA |
+| 𑵆 | U+11D46 | REPHA |
+| 𑵇 | U+11D47 | RAKAR |
 
-| ITRANS | Gondi | Description |
-|--------|-------|-------------|
-| `a` | 𑴀 | Short a |
-| `aa` / `A` | 𑴁 | Long aa |
-| `i` | 𑴂 | Short i |
-| `ii` / `I` / `ee` | 𑴃 | Long ii |
-| `u` | 𑴄 | Short u |
-| `uu` / `U` / `oo` | 𑴅 | Long uu |
-| `e` | 𑴆 | e |
-| `ai` | 𑴈 | ai |
-| `o` | 𑴉 | o |
-| `au` | 𑴋 | au |
+### Numbers (0-9)
 
-### Special Keys
-
-| ITRANS | Gondi | Description |
-|--------|-------|-------------|
-| `M` | 𑵀 | Anusvara (after vowel) |
-| `H` | 𑵁 | Visarga (after vowel) |
-| `MM` | 𑵃 | Chandrabindu |
-| `..` | । | Danda |
-| `...` | ॥ | Double Danda |
-| `x` | 𑴮 | Ksha |
-| `X` | 𑴯 | Gya |
-| `Z` | 𑴰 | Tra |
-
-> **Tip:** Use CAPITAL letters for aspirated consonants (kh=K, gh=G, etc.) and retroflex consonants (T, Th, D, Dh, N).
+| Character | Unicode | Name |
+|-----------|---------|------|
+| 𑵐 | U+11D50 | DIGIT ZERO |
+| 𑵑 | U+11D51 | DIGIT ONE |
+| 𑵒 | U+11D52 | DIGIT TWO |
+| 𑵓 | U+11D53 | DIGIT THREE |
+| 𑵔 | U+11D54 | DIGIT FOUR |
+| 𑵕 | U+11D55 | DIGIT FIVE |
+| 𑵖 | U+11D56 | DIGIT SIX |
+| 𑵗 | U+11D57 | DIGIT SEVEN |
+| 𑵘 | U+11D58 | DIGIT EIGHT |
+| 𑵙 | U+11D59 | DIGIT NINE |
 
 ## 🤝 Support
 
@@ -422,11 +357,18 @@ If you find this project useful, please consider giving it a ⭐ on GitHub. It h
 - **Fork**: [https://github.com/hinditutorpoint/masaram-gondi/fork](https://github.com/hinditutorpoint/masaram-gondi/fork)
 - **Report Issue**: [https://github.com/hinditutorpoint/masaram-gondi/issues](https://github.com/hinditutorpoint/masaram-gondi/issues)
 
-### Buy Me a Coffee
+### Donate
 
-Love this project? Your support helps cover hosting, development time, and keeps the coffee flowing!
+Help preserve the Gondi language and empower millions of indigenous speakers!
 
+#### Buy Me a Coffee
 [![Buy Me a Coffee](https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg)](https://buymeacoffee.com/hinditutorpoint)
+
+#### PayPal
+[![PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.me/hinditutorpoint)
+
+#### GitHub Sponsors
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-GitHub-purple.svg)](https://github.com/sponsors/hinditutorpoint)
 
 ### Other Ways to Support
 
@@ -446,6 +388,17 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/hinditutorpoint/masaram-gondi.git
+cd masaram-gondi
+
+# Open index.html in your browser to see the demo
+# No build process required - just edit and refresh!
+```
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -453,18 +406,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Credits
 
 - **Author**: Rajesh Kumar Dhuriya
-- **Based on**: Keyman keyboard by Rajesh Kumar Dhuriya
 - **Font**: Noto Sans Masaram Gondi by Google Fonts
 - **Unicode Range**: U+11D00–U+11D5F
 
-## 🌐 Links
+## 🌐 Resources
 
 - [Wikipedia - Masaram Gondi](https://en.wikipedia.org/wiki/Masaram_Gondi)
-- [Unicode Chart](https://unicode.org/charts/PDF/U11D00.pdf)
-- [Learn Masaram Gondi](https://gondidarshan.org)
+- [Unicode Chart (PDF)](https://unicode.org/charts/PDF/U11D00.pdf)
+- [Noto Sans Masaram Gondi Font](https://fonts.google.com/noto/specimen/Noto+Sans+Masaram+Gondi)
+- [Documentation Wiki](https://github.com/hinditutorpoint/masaram-gondi/wiki)
+- [Gondi Language (Wikipedia)](https://en.wikipedia.org/wiki/Gondi_language)
+- [Masaram Script (Wikipedia)](https://en.wikipedia.org/wiki/Masaram_script)
 
 ---
 
-**Made with ❤️ by [Rajesh Kumar Dhuriya](https://github.com/hinditutorpoint)**
+**Made with ❤️ for the Gondi Community by [Rajesh Kumar Dhuriya](https://github.com/hinditutorpoint)**
 
-© 2024-25 Masaram Gondi Transliterator. MIT License.
+© 2024-26 Masaram Gondi Direct Typing Plugin. MIT License.

@@ -1,0 +1,1737 @@
+/**
+ * Masaram Gondi Plugin Styles
+ * v5.7.0 - Separate CSS File
+ * 
+ * @author Rajesh Kumar Dhuriya
+ * @license MIT
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES (THEMING)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* Primary Colors */
+    --mgd-primary: #4a90d9;
+    --mgd-primary-dark: #357abd;
+    --mgd-primary-light: #6ba8e5;
+
+    /* Status Colors */
+    --mgd-success: #4CAF50;
+    --mgd-success-dark: #43a047;
+    --mgd-danger: #f44336;
+    --mgd-danger-dark: #d32f2f;
+    --mgd-warning: #ff9800;
+    --mgd-warning-dark: #f57c00;
+    --mgd-info: #2196f3;
+
+    /* Background Colors */
+    --mgd-bg: #f5f5f5;
+    --mgd-bg-dark: #e8e8e8;
+    --mgd-bg-darker: #d4d4d4;
+    --mgd-bg-key: #ffffff;
+    --mgd-bg-key-hover: #f8f8f8;
+    --mgd-bg-key-active: #e8e8e8;
+    --mgd-bg-popup: #ffffff;
+    --mgd-bg-suggestions: #ffffff;
+
+    /* Text Colors */
+    --mgd-text: #333333;
+    --mgd-text-secondary: #666666;
+    --mgd-text-muted: #999999;
+    --mgd-text-light: #cccccc;
+
+    /* Border Colors */
+    --mgd-border: #cccccc;
+    --mgd-border-light: #e0e0e0;
+    --mgd-border-dark: #a0a0a0;
+
+    /* Shadows */
+    --mgd-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+    --mgd-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --mgd-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --mgd-shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.2);
+
+    /* Key Shadows */
+    --mgd-key-shadow: 0 4px 0 #a8a8a8;
+    --mgd-key-shadow-hover: 0 4px 0 #a0a0a0;
+    --mgd-key-shadow-active: 0 2px 0 #a0a0a0;
+
+    /* Fonts */
+    --mgd-font-gondi: 'Noto Sans Masaram Gondi', 'Nirmala UI', 'Segoe UI', sans-serif;
+    --mgd-font-hindi: 'Noto Sans Devanagari', 'Mangal', 'Nirmala UI', sans-serif;
+    --mgd-font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+    /* Sizing */
+    --mgd-radius-sm: 4px;
+    --mgd-radius: 8px;
+    --mgd-radius-lg: 12px;
+    --mgd-radius-xl: 16px;
+    --mgd-radius-full: 9999px;
+
+    /* Transitions */
+    --mgd-transition-fast: 0.1s ease;
+    --mgd-transition: 0.15s ease;
+    --mgd-transition-slow: 0.25s ease;
+
+    /* Z-Index Layers */
+    --mgd-z-keyboard: 9000;
+    --mgd-z-suggestions: 9500;
+    --mgd-z-popup: 10000;
+    --mgd-z-overlay: 10500;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE WRAPPER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+    font-family: var(--mgd-font-ui);
+    box-sizing: border-box;
+}
+
+.mgd-wrapper *,
+.mgd-wrapper *::before,
+.mgd-wrapper *::after {
+    box-sizing: border-box;
+}
+
+.mgd-wrapper input,
+.mgd-wrapper textarea {
+    font-family: var(--mgd-font-gondi);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VIRTUAL KEYBOARD - CONTAINER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-keyboard {
+    display: none;
+    background: linear-gradient(180deg,
+            var(--mgd-bg-darker) 0%,
+            #c8c8c8 100%);
+    border: 1px solid var(--mgd-border-dark);
+    border-radius: var(--mgd-radius-lg);
+    padding: 12px;
+    margin-top: 10px;
+    box-shadow:
+        var(--mgd-shadow-lg),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    touch-action: manipulation;
+    z-index: var(--mgd-z-keyboard);
+}
+
+.mgd-keyboard.mgd-keyboard-visible {
+    display: block;
+    animation: mgd-keyboard-enter 0.25s ease-out;
+}
+
+.mgd-keyboard.mgd-keyboard-hiding {
+    animation: mgd-keyboard-exit 0.2s ease-in forwards;
+}
+
+@keyframes mgd-keyboard-enter {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes mgd-keyboard-exit {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   KEYBOARD ROWS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-keyboard-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.mgd-keyboard-row:last-child {
+    margin-bottom: 0;
+}
+
+/* Staggered QWERTY Layout */
+.mgd-keyboard-row.number-row {
+    margin-bottom: 8px;
+}
+
+.mgd-keyboard-row.top-row {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.mgd-keyboard-row.home-row {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.mgd-keyboard-row.bottom-row {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+/* Special Rows */
+.mgd-keyboard-row.mgd-vowel-row,
+.mgd-keyboard-row.mgd-marks-row {
+    background: rgba(0, 0, 0, 0.05);
+    margin: 8px -8px;
+    padding: 8px 12px;
+    border-radius: var(--mgd-radius);
+    flex-wrap: wrap;
+}
+
+.mgd-keyboard-row.mgd-vowel-row {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.mgd-keyboard-special {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    gap: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   KEYBOARD KEYS - 3D REALISTIC STYLE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-key {
+    position: relative;
+    min-width: 44px;
+    height: 52px;
+    padding: 6px 10px;
+    background: linear-gradient(180deg,
+            #ffffff 0%,
+            #f8f8f8 40%,
+            #f0f0f0 100%);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mgd-font-ui);
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        inset 0 -1px 0 #c0c0c0,
+        0 4px 0 #a8a8a8,
+        0 4px 6px rgba(0, 0, 0, 0.15);
+    transition:
+        background var(--mgd-transition-fast),
+        box-shadow var(--mgd-transition-fast),
+        transform var(--mgd-transition-fast);
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+}
+
+.mgd-key::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.4) 0%,
+            rgba(255, 255, 255, 0) 100%);
+    border-radius: 6px 6px 0 0;
+    pointer-events: none;
+}
+
+.mgd-key:hover {
+    background: linear-gradient(180deg,
+            #ffffff 0%,
+            #f4f4f4 40%,
+            #ececec 100%);
+}
+
+.mgd-key:active {
+    background: linear-gradient(180deg,
+            #e8e8e8 0%,
+            #e0e0e0 40%,
+            #d8d8d8 100%);
+    box-shadow:
+        inset 0 1px 0 #f0f0f0,
+        inset 0 -1px 0 #b0b0b0,
+        0 2px 0 #a0a0a0,
+        0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(2px);
+}
+
+.mgd-key:focus-visible {
+    outline: 3px solid var(--mgd-primary);
+    outline-offset: 2px;
+}
+
+/* Key Text Styles */
+.mgd-key-main {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--mgd-text);
+    line-height: 1.1;
+    font-family: var(--mgd-font-gondi);
+    position: relative;
+    z-index: 1;
+}
+
+.mgd-key-sub {
+    font-size: 10px;
+    color: var(--mgd-text-muted);
+    margin-top: 2px;
+    text-transform: lowercase;
+    font-family: var(--mgd-font-ui);
+    position: relative;
+    z-index: 1;
+}
+
+.mgd-key-gondi {
+    font-size: 11px;
+    color: var(--mgd-text-secondary);
+    margin-top: 1px;
+    font-family: var(--mgd-font-gondi);
+    position: relative;
+    z-index: 1;
+}
+
+/* Number Row Keys */
+.mgd-keyboard-row.number-row .mgd-key {
+    min-width: 38px;
+    height: 42px;
+}
+
+.mgd-keyboard-row.number-row .mgd-key-main {
+    font-size: 18px;
+}
+
+/* Mark Keys */
+.mgd-key-mark {
+    min-width: 36px;
+    height: 44px;
+}
+
+.mgd-key-mark .mgd-key-main {
+    font-size: 18px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SPECIAL KEYS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Space Bar */
+.mgd-key-space {
+    flex: 1;
+    min-width: 180px;
+    max-width: 320px;
+    background: linear-gradient(180deg,
+            #f5f5f5 0%,
+            #ebebeb 40%,
+            #e3e3e3 100%);
+}
+
+.mgd-key-space:hover {
+    background: linear-gradient(180deg,
+            #f8f8f8 0%,
+            #eeeeee 40%,
+            #e6e6e6 100%);
+}
+
+.mgd-key-space span {
+    font-size: 13px;
+    color: var(--mgd-text-secondary);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Shift Key */
+.mgd-key-shift {
+    min-width: 65px;
+    background: linear-gradient(180deg,
+            #e8e8e8 0%,
+            #dedede 40%,
+            #d4d4d4 100%);
+}
+
+.mgd-key-shift.mgd-active {
+    background: linear-gradient(180deg,
+            var(--mgd-primary-light) 0%,
+            var(--mgd-primary) 40%,
+            var(--mgd-primary-dark) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        0 4px 0 #2a5f94,
+        0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.mgd-key-shift.mgd-active span,
+.mgd-key-shift.mgd-active .mgd-key-main {
+    color: white;
+}
+
+/* Backspace Key */
+.mgd-key-backspace {
+    min-width: 70px;
+    background: linear-gradient(180deg,
+            #ffcccc 0%,
+            #ffb8b8 40%,
+            #ffa8a8 100%);
+    box-shadow:
+        inset 0 1px 0 #ffe0e0,
+        inset 0 -1px 0 #e08080,
+        0 4px 0 #c06060,
+        0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.mgd-key-backspace:hover {
+    background: linear-gradient(180deg,
+            #ffd6d6 0%,
+            #ffc2c2 40%,
+            #ffb2b2 100%);
+}
+
+.mgd-key-backspace:active {
+    background: linear-gradient(180deg,
+            #ffa0a0 0%,
+            #ff9090 100%);
+    box-shadow:
+        inset 0 1px 0 #ffc0c0,
+        0 2px 0 #b05050;
+    transform: translateY(2px);
+}
+
+.mgd-key-backspace span {
+    font-size: 18px;
+    color: #cc3333;
+}
+
+/* Clear Key */
+.mgd-key-clear {
+    min-width: 50px;
+    background: linear-gradient(180deg,
+            #ffe6cc 0%,
+            #ffddb8 40%,
+            #ffd4a8 100%);
+    box-shadow:
+        inset 0 1px 0 #fff0e0,
+        inset 0 -1px 0 #d09050,
+        0 4px 0 #b07030,
+        0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.mgd-key-clear:hover {
+    background: linear-gradient(180deg,
+            #fff0d8 0%,
+            #ffe6c4 100%);
+}
+
+.mgd-key-clear span {
+    font-size: 16px;
+    color: #cc6600;
+}
+
+/* Hide Keyboard Key */
+.mgd-key-hide {
+    min-width: 50px;
+    background: linear-gradient(180deg,
+            #e0e8f0 0%,
+            #d4dce8 40%,
+            #c8d4e0 100%);
+    box-shadow:
+        inset 0 1px 0 #eef2f8,
+        inset 0 -1px 0 #a0b0c0,
+        0 4px 0 #8090a8,
+        0 4px 6px rgba(0, 0, 0, 0.12);
+}
+
+.mgd-key-hide:hover {
+    background: linear-gradient(180deg,
+            #e8f0f8 0%,
+            #dce4f0 100%);
+}
+
+.mgd-key-hide span {
+    font-size: 16px;
+    color: #4a6080;
+}
+
+/* Enter Key */
+.mgd-key-enter {
+    min-width: 70px;
+    background: linear-gradient(180deg,
+            #c8e6c8 0%,
+            #b8dab8 40%,
+            #a8d0a8 100%);
+    box-shadow:
+        inset 0 1px 0 #d8f0d8,
+        inset 0 -1px 0 #70a070,
+        0 4px 0 #508050,
+        0 4px 6px rgba(0, 0, 0, 0.12);
+}
+
+.mgd-key-enter span {
+    font-size: 14px;
+    color: #2e7d32;
+}
+
+/* Virama Key */
+.mgd-key-virama {
+    background: linear-gradient(180deg,
+            #e6ffe6 0%,
+            #d4f4d4 40%,
+            #c4ecc4 100%);
+}
+
+.mgd-key-virama .mgd-key-main {
+    color: #2e7d32;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHIFT MODE STYLING
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-keyboard.mgd-shift-active .mgd-key:not(.mgd-key-shift):not(.mgd-key-space):not(.mgd-key-backspace):not(.mgd-key-clear):not(.mgd-key-hide):not(.mgd-key-enter) {
+    background: linear-gradient(180deg,
+            #e8f4ff 0%,
+            #dceeff 40%,
+            #d0e8ff 100%);
+}
+
+.mgd-keyboard.mgd-shift-active .mgd-key-sub {
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--mgd-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   POPUP CONTEXT MENU
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-popup {
+    position: absolute;
+    z-index: var(--mgd-z-popup);
+    background: var(--mgd-bg-popup);
+    border: 1px solid var(--mgd-border);
+    border-radius: var(--mgd-radius-lg);
+    box-shadow: var(--mgd-shadow-xl);
+    padding: 8px 0;
+    min-width: 220px;
+    max-width: 320px;
+    font-family: var(--mgd-font-ui);
+    display: none;
+    overflow: hidden;
+}
+
+.mgd-popup.mgd-popup-visible {
+    display: block;
+    animation: mgd-popup-enter 0.15s ease-out;
+}
+
+@keyframes mgd-popup-enter {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(-5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Popup Header */
+.mgd-popup-header {
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mgd-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--mgd-border-light);
+    margin-bottom: 4px;
+}
+
+/* Popup Items */
+.mgd-popup-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    color: var(--mgd-text);
+    transition: background-color var(--mgd-transition);
+    gap: 12px;
+}
+
+.mgd-popup-item:hover {
+    background-color: #f5f8ff;
+}
+
+.mgd-popup-item:active {
+    background-color: #e8f0ff;
+}
+
+.mgd-popup-item:focus-visible {
+    outline: 2px solid var(--mgd-primary);
+    outline-offset: -2px;
+    background-color: #f5f8ff;
+}
+
+.mgd-popup-item.mgd-disabled {
+    color: var(--mgd-text-light);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.mgd-popup-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.mgd-popup-label {
+    flex: 1;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.mgd-popup-shortcut {
+    font-size: 11px;
+    color: var(--mgd-text-muted);
+    padding: 3px 8px;
+    background: var(--mgd-bg);
+    border-radius: var(--mgd-radius-sm);
+    font-family: 'SF Mono', 'Consolas', monospace;
+}
+
+.mgd-popup-divider {
+    height: 1px;
+    background: var(--mgd-border-light);
+    margin: 6px 0;
+}
+
+/* Popup Toggle Switch */
+.mgd-popup-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.mgd-popup-toggle.mgd-active {
+    background: var(--mgd-success);
+}
+
+.mgd-popup-toggle::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mgd-popup-toggle.mgd-active::after {
+    transform: translateX(20px);
+}
+
+/* Mode Badge */
+.mgd-mode-badge {
+    padding: 4px 10px;
+    border-radius: var(--mgd-radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mgd-mode-badge.mgd-mode-en {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.mgd-mode-badge.mgd-mode-hi {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SUGGESTIONS PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-suggestions {
+    position: absolute;
+    z-index: var(--mgd-z-suggestions);
+    background: var(--mgd-bg-suggestions);
+    border: 1px solid var(--mgd-border);
+    border-radius: var(--mgd-radius);
+    box-shadow: var(--mgd-shadow-lg);
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: none;
+    width: 100%;
+    max-width: 420px;
+    font-family: var(--mgd-font-ui);
+}
+
+.mgd-suggestions.mgd-suggestions-visible {
+    display: block;
+    animation: mgd-suggestions-enter 0.12s ease-out;
+}
+
+@keyframes mgd-suggestions-enter {
+    0% {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Suggestions Header */
+.mgd-suggestions-header {
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mgd-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--mgd-bg);
+    border-bottom: 1px solid var(--mgd-border-light);
+    position: sticky;
+    top: 0;
+}
+
+/* Suggestion Items */
+.mgd-suggestion-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f5f5f5;
+    gap: 14px;
+    transition: background-color var(--mgd-transition);
+}
+
+.mgd-suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.mgd-suggestion-item:hover,
+.mgd-suggestion-item.mgd-selected {
+    background-color: #f5f8ff;
+}
+
+.mgd-suggestion-item:focus-visible {
+    outline: 2px solid var(--mgd-primary);
+    outline-offset: -2px;
+}
+
+.mgd-suggestion-gondi {
+    font-size: 24px;
+    color: var(--mgd-text);
+    font-weight: 500;
+    font-family: var(--mgd-font-gondi);
+    min-width: 70px;
+    line-height: 1.2;
+}
+
+.mgd-suggestion-roman {
+    font-size: 14px;
+    color: var(--mgd-text-secondary);
+    flex: 1;
+}
+
+.mgd-suggestion-hindi {
+    font-size: 14px;
+    color: var(--mgd-text-muted);
+    font-family: var(--mgd-font-hindi);
+}
+
+/* API Source Indicator */
+.mgd-suggestion-item.mgd-suggestion-api .mgd-suggestion-roman::after {
+    content: 'API';
+    display: inline-block;
+    font-size: 9px;
+    background: var(--mgd-primary);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-weight: 600;
+}
+
+/* Empty State */
+.mgd-suggestions-empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: var(--mgd-text-muted);
+    font-size: 14px;
+}
+
+.mgd-suggestions-loading {
+    padding: 20px 16px;
+    text-align: center;
+    color: var(--mgd-text-muted);
+}
+
+.mgd-suggestions-loading::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--mgd-border);
+    border-top-color: var(--mgd-primary);
+    border-radius: 50%;
+    animation: mgd-spin 0.8s linear infinite;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+@keyframes mgd-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TRANSLATE OUTPUT PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-translate-panel {
+    position: absolute;
+    z-index: var(--mgd-z-suggestions);
+    background: var(--mgd-bg-suggestions);
+    border: 1px solid var(--mgd-border);
+    border-radius: var(--mgd-radius);
+    box-shadow: var(--mgd-shadow-lg);
+    width: 100%;
+    max-width: 500px;
+    display: none;
+    font-family: var(--mgd-font-ui);
+    overflow: hidden;
+}
+
+.mgd-translate-panel.mgd-translate-visible {
+    display: block;
+    animation: mgd-suggestions-enter 0.15s ease-out;
+}
+
+.mgd-translate-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--mgd-bg);
+    border-bottom: 1px solid var(--mgd-border-light);
+}
+
+.mgd-translate-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--mgd-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mgd-translate-close {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--mgd-radius-sm);
+    cursor: pointer;
+    color: var(--mgd-text-muted);
+    font-size: 18px;
+    transition: all var(--mgd-transition);
+}
+
+.mgd-translate-close:hover {
+    background: var(--mgd-bg-dark);
+    color: var(--mgd-text);
+}
+
+.mgd-translate-content {
+    padding: 16px;
+}
+
+.mgd-translate-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.mgd-translate-row:last-child {
+    margin-bottom: 0;
+}
+
+.mgd-translate-label {
+    min-width: 60px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mgd-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-top: 4px;
+}
+
+.mgd-translate-value {
+    flex: 1;
+    font-size: 18px;
+    color: var(--mgd-text);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.mgd-translate-value.mgd-gondi {
+    font-family: var(--mgd-font-gondi);
+    font-size: 22px;
+}
+
+.mgd-translate-value.mgd-hindi {
+    font-family: var(--mgd-font-hindi);
+}
+
+.mgd-translate-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--mgd-bg);
+    border-top: 1px solid var(--mgd-border-light);
+}
+
+.mgd-translate-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid var(--mgd-border);
+    border-radius: var(--mgd-radius);
+    background: white;
+    color: var(--mgd-text);
+    cursor: pointer;
+    transition: all var(--mgd-transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mgd-translate-btn:hover {
+    background: var(--mgd-bg);
+    border-color: var(--mgd-border-dark);
+}
+
+.mgd-translate-btn.mgd-primary {
+    background: var(--mgd-primary);
+    border-color: var(--mgd-primary-dark);
+    color: white;
+}
+
+.mgd-translate-btn.mgd-primary:hover {
+    background: var(--mgd-primary-dark);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   OVERLAY (For Mobile Popup/Keyboard)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: calc(var(--mgd-z-popup) - 1);
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.mgd-overlay.mgd-overlay-visible {
+    display: block;
+    opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE - TABLET (768px and below)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media screen and (max-width: 768px) {
+    .mgd-keyboard {
+        padding: 10px;
+        border-radius: var(--mgd-radius);
+    }
+
+    .mgd-keyboard-row {
+        gap: 5px;
+        margin-bottom: 5px;
+    }
+
+    .mgd-keyboard-row.top-row {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .mgd-keyboard-row.home-row {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .mgd-keyboard-row.bottom-row {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    .mgd-key {
+        min-width: 38px;
+        height: 48px;
+        padding: 5px 8px;
+        box-shadow:
+            inset 0 1px 0 #ffffff,
+            inset 0 -1px 0 #c0c0c0,
+            0 3px 0 #a8a8a8,
+            0 3px 5px rgba(0, 0, 0, 0.12);
+    }
+
+    .mgd-key:active {
+        transform: translateY(2px);
+        box-shadow:
+            inset 0 1px 0 #f0f0f0,
+            inset 0 -1px 0 #b0b0b0,
+            0 1px 0 #a0a0a0;
+    }
+
+    .mgd-key-main {
+        font-size: 18px;
+    }
+
+    .mgd-key-sub {
+        font-size: 9px;
+    }
+
+    .mgd-key-space {
+        min-width: 140px;
+    }
+
+    .mgd-key-backspace,
+    .mgd-key-shift {
+        min-width: 55px;
+    }
+
+    .mgd-popup {
+        min-width: 200px;
+    }
+
+    .mgd-popup-item {
+        padding: 11px 14px;
+    }
+
+    .mgd-suggestion-gondi {
+        font-size: 20px;
+        min-width: 60px;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE - MOBILE (480px and below)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media screen and (max-width: 480px) {
+
+    /* Fixed Bottom Keyboard */
+    .mgd-keyboard {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        padding: 8px 6px 24px;
+        border-radius: var(--mgd-radius-xl) var(--mgd-radius-xl) 0 0;
+        border-bottom: none;
+        z-index: var(--mgd-z-keyboard);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+
+    .mgd-keyboard-row {
+        gap: 4px;
+        margin-bottom: 4px;
+    }
+
+    .mgd-keyboard-row.top-row,
+    .mgd-keyboard-row.home-row,
+    .mgd-keyboard-row.bottom-row {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .mgd-keyboard-row.mgd-vowel-row,
+    .mgd-keyboard-row.mgd-marks-row {
+        margin: 6px -4px;
+        padding: 6px 4px;
+        flex-wrap: wrap;
+    }
+
+    .mgd-key {
+        min-width: 28px;
+        height: 44px;
+        padding: 4px 6px;
+        flex: 1;
+        max-width: 38px;
+        border-radius: 5px;
+        box-shadow:
+            inset 0 1px 0 #ffffff,
+            inset 0 -1px 0 #c0c0c0,
+            0 2px 0 #a8a8a8,
+            0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .mgd-key:active {
+        transform: translateY(1px);
+    }
+
+    .mgd-key-main {
+        font-size: 16px;
+    }
+
+    .mgd-key-sub,
+    .mgd-key-gondi {
+        display: none;
+    }
+
+    .mgd-key-mark {
+        min-width: 26px;
+        max-width: 34px;
+        height: 40px;
+    }
+
+    .mgd-key-mark .mgd-key-main {
+        font-size: 15px;
+    }
+
+    .mgd-keyboard-special {
+        margin-top: 8px;
+        padding-top: 8px;
+        gap: 6px;
+    }
+
+    .mgd-key-space {
+        min-width: 100px;
+        max-width: none;
+        flex: 2.5;
+    }
+
+    .mgd-key-space span {
+        font-size: 12px;
+    }
+
+    .mgd-key-backspace,
+    .mgd-key-shift,
+    .mgd-key-clear,
+    .mgd-key-hide,
+    .mgd-key-enter {
+        min-width: 44px;
+        flex: 1;
+    }
+
+    /* Bottom Sheet Popup */
+    .mgd-popup {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: auto !important;
+        max-width: none;
+        width: 100%;
+        border-radius: var(--mgd-radius-xl) var(--mgd-radius-xl) 0 0;
+        padding: 16px 0 32px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .mgd-popup.mgd-popup-visible {
+        animation: mgd-popup-slide-up 0.25s ease-out;
+    }
+
+    @keyframes mgd-popup-slide-up {
+        from {
+            transform: translateY(100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .mgd-popup::before {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 4px;
+        background: #ddd;
+        border-radius: 2px;
+        margin: 0 auto 16px;
+    }
+
+    .mgd-popup-item {
+        padding: 16px 20px;
+    }
+
+    .mgd-popup-icon {
+        font-size: 20px;
+    }
+
+    .mgd-popup-label {
+        font-size: 16px;
+    }
+
+    /* Bottom Sheet Suggestions */
+    .mgd-suggestions {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: auto !important;
+        max-width: none;
+        width: 100%;
+        max-height: 45vh;
+        border-radius: var(--mgd-radius-xl) var(--mgd-radius-xl) 0 0;
+        padding-bottom: 24px;
+    }
+
+    .mgd-suggestion-item {
+        padding: 14px 18px;
+    }
+
+    .mgd-suggestion-gondi {
+        font-size: 20px;
+    }
+
+    /* Bottom Sheet Translate Panel */
+    .mgd-translate-panel {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: auto !important;
+        max-width: none;
+        width: 100%;
+        max-height: 60vh;
+        border-radius: var(--mgd-radius-xl) var(--mgd-radius-xl) 0 0;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE - EXTRA SMALL MOBILE (360px and below)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media screen and (max-width: 360px) {
+    .mgd-key {
+        min-width: 24px;
+        max-width: 34px;
+        height: 40px;
+    }
+
+    .mgd-key-main {
+        font-size: 14px;
+    }
+
+    .mgd-key-mark {
+        min-width: 22px;
+        height: 36px;
+    }
+
+    .mgd-key-space {
+        min-width: 80px;
+    }
+
+    .mgd-key-backspace span,
+    .mgd-key-clear span,
+    .mgd-key-hide span {
+        font-size: 14px;
+    }
+
+    .mgd-popup-item {
+        padding: 14px 16px;
+    }
+
+    .mgd-suggestion-gondi {
+        font-size: 18px;
+        min-width: 50px;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE - LANDSCAPE MODE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .mgd-keyboard {
+        padding: 6px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 60vh;
+    }
+
+    .mgd-keyboard-row {
+        gap: 3px;
+        margin-bottom: 3px;
+    }
+
+    .mgd-key {
+        height: 36px;
+        min-width: 32px;
+        box-shadow:
+            inset 0 1px 0 #ffffff,
+            inset 0 -1px 0 #c0c0c0,
+            0 2px 0 #a8a8a8;
+    }
+
+    .mgd-key-main {
+        font-size: 14px;
+    }
+
+    .mgd-key-sub,
+    .mgd-key-gondi {
+        display: none;
+    }
+
+    .mgd-keyboard-row.mgd-vowel-row,
+    .mgd-keyboard-row.mgd-marks-row {
+        display: none;
+    }
+
+    .mgd-keyboard-special {
+        margin-top: 4px;
+        padding-top: 4px;
+    }
+
+    .mgd-popup {
+        max-height: 80vh;
+    }
+
+    .mgd-suggestions {
+        max-height: 60vh;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK MODE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --mgd-bg: #2a2a2a;
+        --mgd-bg-dark: #222222;
+        --mgd-bg-darker: #1a1a1a;
+        --mgd-bg-key: #404040;
+        --mgd-bg-key-hover: #4a4a4a;
+        --mgd-bg-key-active: #353535;
+        --mgd-bg-popup: #2a2a2a;
+        --mgd-bg-suggestions: #2a2a2a;
+
+        --mgd-text: #f0f0f0;
+        --mgd-text-secondary: #b0b0b0;
+        --mgd-text-muted: #808080;
+        --mgd-text-light: #505050;
+
+        --mgd-border: #555555;
+        --mgd-border-light: #444444;
+        --mgd-border-dark: #666666;
+
+        --mgd-key-shadow: 0 4px 0 #252525;
+    }
+
+    .mgd-keyboard {
+        background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+        border-color: #555;
+    }
+
+    .mgd-key {
+        background: linear-gradient(180deg,
+                #505050 0%,
+                #484848 40%,
+                #404040 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0 #303030,
+            0 4px 0 #252525,
+            0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .mgd-key::before {
+        background: linear-gradient(180deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0) 100%);
+    }
+
+    .mgd-key:hover {
+        background: linear-gradient(180deg,
+                #585858 0%,
+                #505050 40%,
+                #484848 100%);
+    }
+
+    .mgd-key:active {
+        background: linear-gradient(180deg,
+                #404040 0%,
+                #383838 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 2px 0 #202020;
+    }
+
+    .mgd-key-main {
+        color: var(--mgd-text);
+    }
+
+    .mgd-key-sub,
+    .mgd-key-gondi {
+        color: var(--mgd-text-muted);
+    }
+
+    .mgd-key-space {
+        background: linear-gradient(180deg, #404040 0%, #383838 40%, #303030 100%);
+    }
+
+    .mgd-key-backspace {
+        background: linear-gradient(180deg, #6a3535 0%, #5a3030 40%, #503030 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0 #402020,
+            0 4px 0 #302020,
+            0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .mgd-key-backspace span {
+        color: #ff8080;
+    }
+
+    .mgd-key-clear {
+        background: linear-gradient(180deg, #5a4530 0%, #504030 100%);
+    }
+
+    .mgd-key-clear span {
+        color: #ffb060;
+    }
+
+    .mgd-key-hide {
+        background: linear-gradient(180deg, #3a4550 0%, #303a45 100%);
+    }
+
+    .mgd-key-hide span {
+        color: #80a0c0;
+    }
+
+    .mgd-keyboard.mgd-shift-active .mgd-key:not(.mgd-key-shift):not(.mgd-key-space):not(.mgd-key-backspace):not(.mgd-key-clear):not(.mgd-key-hide) {
+        background: linear-gradient(180deg, #354050 0%, #303848 40%, #283040 100%);
+    }
+
+    .mgd-keyboard-row.mgd-vowel-row,
+    .mgd-keyboard-row.mgd-marks-row {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .mgd-popup {
+        background: var(--mgd-bg-popup);
+        border-color: #444;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .mgd-popup-item {
+        color: var(--mgd-text);
+    }
+
+    .mgd-popup-item:hover {
+        background-color: #3a3a3a;
+    }
+
+    .mgd-popup-shortcut {
+        background: #404040;
+        color: #aaa;
+    }
+
+    .mgd-popup-divider {
+        background: #444;
+    }
+
+    .mgd-popup-header {
+        background: #222;
+        border-color: #444;
+    }
+
+    .mgd-suggestions {
+        background: var(--mgd-bg-suggestions);
+        border-color: #444;
+    }
+
+    .mgd-suggestions-header {
+        background: #222;
+    }
+
+    .mgd-suggestion-item {
+        border-color: #3a3a3a;
+    }
+
+    .mgd-suggestion-item:hover,
+    .mgd-suggestion-item.mgd-selected {
+        background-color: #3a3a3a;
+    }
+
+    .mgd-suggestion-gondi {
+        color: var(--mgd-text);
+    }
+
+    .mgd-translate-panel {
+        background: var(--mgd-bg-popup);
+        border-color: #444;
+    }
+
+    .mgd-translate-header,
+    .mgd-translate-actions {
+        background: #222;
+        border-color: #444;
+    }
+
+    .mgd-translate-btn {
+        background: #3a3a3a;
+        border-color: #555;
+        color: var(--mgd-text);
+    }
+
+    .mgd-translate-btn:hover {
+        background: #444;
+    }
+
+    .mgd-overlay {
+        background: rgba(0, 0, 0, 0.6);
+    }
+}
+
+/* Force dark mode class */
+.mgd-dark {
+    --mgd-bg: #2a2a2a;
+    --mgd-bg-dark: #222222;
+    --mgd-bg-darker: #1a1a1a;
+    --mgd-bg-key: #404040;
+    --mgd-bg-popup: #2a2a2a;
+    --mgd-bg-suggestions: #2a2a2a;
+    --mgd-text: #f0f0f0;
+    --mgd-text-secondary: #b0b0b0;
+    --mgd-text-muted: #808080;
+    --mgd-border: #555555;
+    --mgd-border-light: #444444;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOUCH DEVICE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (hover: none) and (pointer: coarse) {
+    .mgd-key {
+        min-height: 44px;
+    }
+
+    .mgd-popup-item {
+        min-height: 48px;
+    }
+
+    .mgd-suggestion-item {
+        min-height: 52px;
+    }
+
+    /* Disable hover effects on touch devices */
+    .mgd-key:hover {
+        background: linear-gradient(180deg,
+                #ffffff 0%,
+                #f8f8f8 40%,
+                #f0f0f0 100%);
+    }
+
+    .mgd-popup-item:hover {
+        background-color: transparent;
+    }
+
+    .mgd-suggestion-item:hover {
+        background-color: transparent;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Focus visible outlines */
+.mgd-key:focus-visible,
+.mgd-popup-item:focus-visible,
+.mgd-suggestion-item:focus-visible,
+.mgd-translate-btn:focus-visible {
+    outline: 3px solid var(--mgd-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .mgd-keyboard,
+    .mgd-keyboard.mgd-keyboard-visible,
+    .mgd-keyboard.mgd-keyboard-hiding,
+    .mgd-popup,
+    .mgd-popup.mgd-popup-visible,
+    .mgd-suggestions,
+    .mgd-suggestions.mgd-suggestions-visible,
+    .mgd-translate-panel,
+    .mgd-key,
+    .mgd-popup-toggle,
+    .mgd-overlay {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .mgd-key {
+        border: 2px solid #000;
+    }
+
+    .mgd-popup,
+    .mgd-suggestions,
+    .mgd-translate-panel {
+        border: 2px solid #000;
+    }
+
+    .mgd-key:focus-visible,
+    .mgd-popup-item:focus-visible {
+        outline-width: 4px;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   KEYBOARD LAYOUT SPECIFIC STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Hindi Keyboard */
+.mgd-keyboard-hindi .mgd-key {
+    min-width: 34px;
+}
+
+.mgd-keyboard-hindi .mgd-key-main {
+    font-size: 17px;
+    font-family: var(--mgd-font-hindi);
+}
+
+.mgd-keyboard-hindi .mgd-keyboard-row.number-row .mgd-key-main {
+    font-size: 16px;
+}
+
+/* Gondi Keyboard */
+.mgd-keyboard-gondi .mgd-key {
+    min-width: 36px;
+}
+
+.mgd-keyboard-gondi .mgd-key-main {
+    font-size: 19px;
+    font-family: var(--mgd-font-gondi);
+}
+
+/* ITRANS Keyboard */
+.mgd-keyboard-itrans .mgd-key {
+    min-width: 42px;
+}
+
+.mgd-keyboard-itrans .mgd-key-main {
+    font-family: var(--mgd-font-gondi);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRINT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media print {
+
+    .mgd-keyboard,
+    .mgd-popup,
+    .mgd-suggestions,
+    .mgd-translate-panel,
+    .mgd-overlay {
+        display: none !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mgd-hidden {
+    display: none !important;
+}
+
+.mgd-visible {
+    display: block !important;
+}
+
+.mgd-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
